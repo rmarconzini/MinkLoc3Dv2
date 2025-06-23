@@ -23,6 +23,11 @@ def make_losses(params: TrainingParams):
             similarity=params.similarity,
             positives_per_query=params.positives_per_query,
         )
+    elif params.loss == "der":
+        # Der-based batch hard triplet loss with masks
+        loss_fn = DerBasedBatchHardTripletLossWithMask(
+            margin=params.margin, der_lambda=params.der_lambda
+        )
     else:
         print("Unknown loss: {}".format(params.loss))
         raise NotImplementedError
@@ -177,7 +182,6 @@ class DerBasedBatchHardTripletLossWithMask:
             margin=self.margin,
             swap=True,
             distance=self.distance,
-            reducer=self.reducer_fn,
             collect_stats=True,
             der_lambda=self.der_lambda,
         )
@@ -195,25 +199,20 @@ class DerBasedBatchHardTripletLossWithMask:
             global_embeddings.device
         )
 
-        # Call the DerTripletMarginLoss, passing all NIG parameters explicitly
         loss_output_dict = self.loss_fn(
-            embeddings=global_embeddings,  # Used for standard distance calculations
-            labels=dummy_labels,  # For pytorch-metric-learning internal conversion
+            embeddings=global_embeddings,  
+            labels=dummy_labels,
             indices_tuple=hard_triplets,
-            ref_emb=None,  # Assuming not using ref_emb for now
-            ref_labels=None,  # Assuming not using ref_labels for now
+            ref_emb=None,
+            ref_labels=None,
             gamma=gamma,
             nu=nu,
             alpha=alpha,
             beta=beta,
         )
-        # Extract the final reduced loss value
-        loss = loss_output_dict["loss"]["losses"]
 
         stats = {
-            "loss": loss.item(),
             "avg_embedding_norm": self.loss_fn.distance.final_avg_query_norm,
-            "num_non_zero_triplets": self.loss_fn.reducer.triplets_past_filter,
             "num_triplets": len(hard_triplets[0]),
             "mean_pos_pair_dist": self.miner_fn.mean_pos_pair_dist,
             "mean_neg_pair_dist": self.miner_fn.mean_neg_pair_dist,
@@ -222,4 +221,11 @@ class DerBasedBatchHardTripletLossWithMask:
             "min_pos_pair_dist": self.miner_fn.min_pos_pair_dist,
             "min_neg_pair_dist": self.miner_fn.min_neg_pair_dist,
         }
+
+        # Applichiamo la riduzione QUI per ottenere la loss finale.
+        loss = self.reducer_fn(loss_output_dict, global_embeddings, dummy_labels)
+        
+        # Aggiorniamo le statistiche con i valori calcolati dal reducer.
+        stats["loss"] = loss.item()
+        stats["num_non_zero_triplets"] = self.reducer_fn.triplets_past_filter
         return loss, stats

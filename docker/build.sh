@@ -1,0 +1,1 @@
+docker build -f docker/cpu/Dockerfile --no-cache -t minkloc3dv2-cpu .

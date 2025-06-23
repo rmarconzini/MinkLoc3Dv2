@@ -82,7 +82,7 @@ class TrainingParams:
     """
     Parameters for model training
     """
-    def __init__(self, params_path: str, model_params_path: str, debug: bool = False):
+    def __init__(self, params_path: str, model_params_path: str, debug: bool = False, dataset_folder_override: str = None):
         """
         Configuration files
         :param path: Training configuration file
@@ -99,7 +99,11 @@ class TrainingParams:
 
         config.read(self.params_path)
         params = config['DEFAULT']
-        self.dataset_folder = params.get('dataset_folder')
+        # Override dataset_folder con valore da CLI se fornito
+        if dataset_folder_override is not None:
+            self.dataset_folder = dataset_folder_override
+        else:
+            self.dataset_folder = params.get('dataset_folder')
 
         params = config['TRAIN']
         self.save_freq = params.getint('save_freq', 0)          # Model saving frequency (in epochs)
@@ -154,6 +158,10 @@ class TrainingParams:
             # Temperatures (annealing parameter) and numbers of nearest neighbours to consider
             self.tau1 = params.getfloat('tau1', 0.01)
             self.margin = params.getfloat('margin', None)    # Margin used in loss function
+        elif self.loss == 'der':
+            # Lambda for Deep Evidential Regression loss
+            self.margin = params.getfloat('margin', 0.4)
+            self.der_lambda = params.getfloat('der_lambda', 0.01)
 
         # Similarity measure: based on cosine similarity or Euclidean distance
         self.similarity = params.get('similarity', 'euclidean')
