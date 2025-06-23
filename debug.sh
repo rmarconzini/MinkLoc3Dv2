@@ -1,0 +1,1 @@
+python training/train.py --config config/config_der/config_baseline_v2_debug.txt --model_config models/minkloc3dv2_der.txt

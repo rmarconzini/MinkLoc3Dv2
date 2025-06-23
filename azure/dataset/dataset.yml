@@ -1,0 +1,7 @@
+$schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
+
+type: uri_folder
+name: dataset
+version: 1
+description: Oxford RobotCar and InHouse datasets to train MinkLoc3Dv2 model
+path:  /Users/marconzinir/Personal/tesi/git/MinkLoc3Dv2/data/benchmark_datasets

@@ -1,11 +1,11 @@
-# MinkLoc3Dv2 training config using Baseline dataset
+# MinkLoc3Dv2 training config using Baseline dataset and DER loss
 [DEFAULT]
-dataset_folder = /workspace/data/benchmark_datasets
+dataset_folder = /Users/marconzinir/Personal/tesi/git/data/benchmark_datasets
 
 [TRAIN]
 num_workers = 4
-batch_size = 2048
-batch_split_size = 128
+batch_size = 256
+batch_split_size = 0
 val_batch_size = 256
 
 lr = 1e-3
@@ -13,9 +13,10 @@ epochs = 50
 scheduler_milestones = 10, 30
 aug_mode = 1
 weight_decay = 1e-4
-loss = TruncatedSmoothAP
-tau1 = 0.01
+loss = der
+der_lambda = 1e-3
 positives_per_query = 4
+margin = 0.2
 
 train_file = training_queries_baseline_v2.pickle
 val_file = test_queries_baseline_v2.pickle

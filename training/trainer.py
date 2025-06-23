@@ -15,6 +15,10 @@ from datasets.dataset_utils import make_dataloaders
 from eval.pnv_evaluate import evaluate, print_eval_stats, pnv_write_eval_stats
 
 
+if "WANDB_API_KEY" in os.environ:
+    wandb.login(key=os.environ["WANDB_API_KEY"])
+
+
 def print_global_stats(phase, stats):
     s = f"{phase}  loss: {stats['loss']:.4f}   embedding norm: {stats['avg_embedding_norm']:.3f}  "
     if 'num_triplets' in stats:
@@ -60,7 +64,7 @@ def training_step(global_iter, model, phase, device, optimizer, loss_fn):
 
         embeddings = y['global']
 
-        loss, temp_stats = loss_fn(embeddings, positives_mask, negatives_mask)
+        loss, temp_stats = loss_fn(y, positives_mask, negatives_mask)
         temp_stats = tensors_to_numbers(temp_stats)
         stats.update(temp_stats)
         if phase == 'train':
@@ -203,7 +207,11 @@ def do_train(params: TrainingParams):
     params_dict = {e: params.__dict__[e] for e in params.__dict__ if e != 'model_params'}
     model_params_dict = {"model_params." + e: params.model_params.__dict__[e] for e in params.model_params.__dict__}
     params_dict.update(model_params_dict)
-    wandb.init(project='MinkLoc2', config=params_dict)
+    wandb.init(
+        project='MinkLoc2',
+        config=params_dict,
+        mode=os.getenv("WANDB_MODE", "offline"),
+        dir=os.getenv("AZUREML_OUTPUT_DIR", "./wandb_logs"))
 
     ###########################################################################
     #
@@ -321,11 +329,6 @@ def do_train(params: TrainingParams):
 
 
 def create_weights_folder():
-    # Create a folder to save weights of trained models
-    this_file_path = pathlib.Path(__file__).parent.absolute()
-    temp, _ = os.path.split(this_file_path)
-    weights_path = os.path.join(temp, 'weights')
-    if not os.path.exists(weights_path):
-        os.mkdir(weights_path)
-    assert os.path.exists(weights_path), 'Cannot create weights folder: {}'.format(weights_path)
-    return weights_path
+    output_dir = './outputs'
+    os.makedirs(output_dir, exist_ok=True)
+    return output_dir

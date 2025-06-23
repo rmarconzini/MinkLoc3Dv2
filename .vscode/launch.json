@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug train.py (MinkLoc3Dv2)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/training/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false, 
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}"
+            },
+            "args": [
+                "--config", "config/config_der/config_baseline_v2_debug.txt",
+                "--model_config", "models/minkloc3dv2_der.txt"
+            ]
+        }
+    ]
+}
