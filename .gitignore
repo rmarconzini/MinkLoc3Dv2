@@ -132,3 +132,5 @@ azure/run/*
 config/config_der/*
 models/config/config_der/*
 /outputs/*
+
+.vscode/*
