@@ -53,16 +53,14 @@ def evaluate_der(model, device, params: TrainingParams, log: bool = False, show_
 def evaluate_dataset(model, device, params: TrainingParams, database_sets, query_sets, log: bool = False,
                      show_progress: bool = False):
 
-    # 1. Calcola embedding e incertezza per tutti i dati in anticipo
-    db_embeddings, _ = get_embeddings_and_uncertainties(model, database_sets, device, params, 'Computing database embeddings')
-    query_embeddings, query_uncertainties = get_embeddings_and_uncertainties(model, query_sets, device, params, 'Computing query embeddings')
+    db_embeddings, _ = get_embeddings_and_uncertainties(model, database_sets, device, params, 'Computing database embeddings', show_progress=show_progress)
+    query_embeddings, query_uncertainties = get_embeddings_and_uncertainties(model, query_sets, device, params, 'Computing query embeddings', show_progress=show_progress)
 
     dataset_stats = {}
     num_removal_steps = int(1 / PERCENTAGE_TO_REMOVE_STEP)
 
     for k in range(num_removal_steps):
         percentage_to_remove = k * PERCENTAGE_TO_REMOVE_STEP
-        print(f"Evaluating with {percentage_to_remove:.0%} most uncertain queries removed...")
 
         recall_sum = np.zeros(NUM_NEIGHBORS)
         one_percent_recall_sum = []
@@ -96,11 +94,11 @@ def evaluate_dataset(model, device, params: TrainingParams, database_sets, query
     return dataset_stats
 
 
-def get_embeddings_and_uncertainties(model, sets, device, params, description):
+def get_embeddings_and_uncertainties(model, sets, device, params, description, show_progress=False):
 
     all_embeddings = []
     all_uncertainties = []
-    for set_data in tqdm.tqdm(sets, desc=description):
+    for set_data in tqdm.tqdm(sets, desc=description, disable=not show_progress):
         embeddings = np.zeros((len(set_data), params.model_params.output_dim))
         uncertainties = np.zeros((len(set_data), params.model_params.output_dim))
         for i, elem_ndx in enumerate(set_data):
@@ -139,7 +137,6 @@ def get_indices_to_keep(uncertainties, percentage_to_remove):
     total_uncertainty_score = np.sum(uncertainties, axis=1)
     sorted_indices = np.argsort(total_uncertainty_score)
     num_to_keep = len(uncertainties) - int(len(uncertainties) * percentage_to_remove)
-    # Mantiene gli indici con l'incertezza più bassa
     return sorted_indices[:num_to_keep]
 
 
@@ -160,7 +157,6 @@ def get_recall(database_embeddings, query_embeddings, query_ground_truth):
         indices = database_kdtree.query(np.array([query_embeddings[i]]), k=NUM_NEIGHBORS, return_distance=False)
         
         if len(set(indices[0]).intersection(set(true_positives))) > 0:
-            # Trova il primo match e aggiorna il recall cumulativo
             for j in range(NUM_NEIGHBORS):
                 if indices[0, j] in true_positives:
                     recall[j:] += 1
@@ -185,7 +181,6 @@ def pnv_write_eval_stats(file_name, prefix, stats):
     s = prefix
     ave_1p_recall_l = []
     ave_recall_l = []
-    # Print results on the final model
     with open(file_name, "a") as f:
         for ds in stats:
             ave_1p_recall = stats[ds]['ave_one_percent_recall']
@@ -220,7 +215,7 @@ if __name__ == "__main__":
     model.load_state_dict(torch.load(args.weights, map_location=device))
     model.to(device)
 
-    stats = evaluate_der(model, device, params, show_progress=True)
+    stats = evaluate_der(model, device, params, show_progress=False)
     print_eval_stats(stats)
 
     model_params_name = os.path.split(params.model_params.model_params_path)[1]

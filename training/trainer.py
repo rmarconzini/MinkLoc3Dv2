@@ -335,9 +335,9 @@ def do_train(params: TrainingParams):
     # Evaluate the final
     # PointNetVLAD datasets evaluation protocol
     stats = evaluate(model, device, params, log=False)
-    stat_uncertainty = evaluate_der(model, device, params)
     print("--- STANDARD EVALUATION RESULTS ---")
     print_eval_stats(stats)
+    stat_uncertainty = evaluate_der(model, device, params)
     print("--- UNCERTAINTY EVALUATION RESULTS ---")
     print_eval_stats(stat_uncertainty)
 
