@@ -13,6 +13,7 @@ from models.losses.loss import make_losses
 from models.model_factory import model_factory
 from datasets.dataset_utils import make_dataloaders
 from eval.pnv_evaluate import evaluate, print_eval_stats, pnv_write_eval_stats
+from eval.pnv_evaluate_der import evaluate_der
 
 
 if "WANDB_API_KEY" in os.environ:
@@ -45,31 +46,28 @@ def tensors_to_numbers(stats):
     return stats
 
 
-def training_step(global_iter, model, phase, device, optimizer, loss_fn):
+def training_step(global_iter, model, phase, device, loss_fn, gradient_accumulation_steps=1):
     assert phase in ['train', 'val']
 
     batch, positives_mask, negatives_mask = next(global_iter)
     batch = {e: batch[e].to(device) for e in batch}
 
-    if phase == 'train':
-        model.train()
-    else:
-        model.eval()
-
-    optimizer.zero_grad()
-
     with torch.set_grad_enabled(phase == 'train'):
         y = model(batch)
         stats = model.stats.copy() if hasattr(model, 'stats') else {}
 
-        embeddings = y['global']
+        # embeddings = y['global']
 
         loss, temp_stats = loss_fn(y, positives_mask, negatives_mask)
         temp_stats = tensors_to_numbers(temp_stats)
         stats.update(temp_stats)
         if phase == 'train':
+            # Gradient accumulation is used to simulate larger batch sizes if gradient_accumulation_steps > 1
+            if gradient_accumulation_steps > 1:
+                loss = loss / gradient_accumulation_steps
+            
             loss.backward()
-            optimizer.step()
+            #optimizer.step()
 
     torch.cuda.empty_cache()  # Prevent excessive GPU memory consumption by SparseTensors
 
@@ -193,12 +191,15 @@ def do_train(params: TrainingParams):
             scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, params.scheduler_milestones, gamma=0.1)
         else:
             raise NotImplementedError('Unsupported LR scheduler: {}'.format(params.scheduler))
+    
+    if params.gradient_accumulation_steps > 1:
+        print(f"Gradient Accumulation enabled. Effective batch size: {params.batch_size * params.gradient_accumulation_steps}")
 
-    if params.batch_split_size is None or params.batch_split_size == 0:
-        train_step_fn = training_step
-    else:
-        # Multi-staged training approach with large batch split into multiple smaller chunks with batch_split_size elems
-        train_step_fn = multistaged_training_step
+    # if params.batch_split_size is None or params.batch_split_size == 0:
+    #     train_step_fn = training_step
+    # else:
+    #     # Multi-staged training approach with large batch split into multiple smaller chunks with batch_split_size elems
+    #     train_step_fn = multistaged_training_step
 
     ###########################################################################
     # Initialize Weights&Biases logging service
@@ -214,7 +215,7 @@ def do_train(params: TrainingParams):
         dir=os.getenv("AZUREML_OUTPUT_DIR", "./wandb_logs"))
 
     ###########################################################################
-    #
+    # Training loop
     ###########################################################################
 
     # Training statistics
@@ -231,29 +232,48 @@ def do_train(params: TrainingParams):
         metrics = {'train': {}, 'val': {}}      # Metrics for wandb reporting
 
         for phase in phases:
-            running_stats = []  # running stats for the current epoch and phase
-            count_batches = 0
-
             if phase == 'train':
-                global_iter = iter(dataloaders['train'])
+                model.train()
+                # Reset optimizer gradients before each training epoch
+                optimizer.zero_grad()
             else:
-                global_iter = None if dataloaders['val'] is None else iter(dataloaders['val'])
+                model.eval()
 
-            while True:
-                count_batches += 1
-                batch_stats = {}
-                if params.debug and count_batches > 2:
-                    break
+            running_stats = []  # running stats for the current epoch and phase+
+            # count_batches = 0
 
-                try:
-                    temp_stats = train_step_fn(global_iter, model, phase, device, optimizer, loss_fn)
-                    batch_stats['global'] = temp_stats
+            # if phase == 'train':
+            #     global_iter = iter(dataloaders['train'])
+            # else:
+            #     global_iter = None if dataloaders['val'] is None else iter(dataloaders['val'])
 
-                except StopIteration:
-                    # Terminate the epoch when one of dataloders is exhausted
-                    break
+            # while True:
+            #     count_batches += 1
+            #     batch_stats = {}
+            #     if params.debug and count_batches > 2:
+            #         break
 
-                running_stats.append(batch_stats)
+            #     try:
+            #         temp_stats = train_step_fn(global_iter, model, phase, device, optimizer, loss_fn)
+            #         batch_stats['global'] = temp_stats
+
+            #     except StopIteration:
+            #         # Terminate the epoch when one of dataloders is exhausted
+            #         break
+
+            #     running_stats.append(batch_stats)
+            dataloader = dataloaders[phase]
+            for batch_ndx, batch_data in enumerate(dataloader):
+                single_batch_iter = iter([batch_data])
+                batch_stats = training_step(single_batch_iter, model, phase, device, loss_fn, params.gradient_accumulation_steps)
+                running_stats.append({'global': batch_stats})
+                # Gradient accumulation
+                if phase == 'train' and (batch_ndx + 1) % params.gradient_accumulation_steps == 0:
+                    optimizer.step()
+                    optimizer.zero_grad()
+            if phase == 'train' and len(dataloader) % params.gradient_accumulation_steps != 0:
+                optimizer.step()
+                optimizer.zero_grad()
 
             # Compute mean stats for the phase
             epoch_stats = {}
@@ -315,7 +335,11 @@ def do_train(params: TrainingParams):
     # Evaluate the final
     # PointNetVLAD datasets evaluation protocol
     stats = evaluate(model, device, params, log=False)
+    stat_uncertainty = evaluate_der(model, device, params)
+    print("--- STANDARD EVALUATION RESULTS ---")
     print_eval_stats(stats)
+    print("--- UNCERTAINTY EVALUATION RESULTS ---")
+    print_eval_stats(stat_uncertainty)
 
     print('.')
 
@@ -325,7 +349,8 @@ def do_train(params: TrainingParams):
     model_name = os.path.splitext(os.path.split(final_model_path)[1])[0]
     prefix = "{}, {}, {}".format(model_params_name, config_name, model_name)
 
-    pnv_write_eval_stats("pnv_experiment_results.txt", prefix, stats)
+    pnv_write_eval_stats("./outputs/pnv_experiment_results.txt", prefix, stats)
+    pnv_write_eval_stats("./outputs/pnv_experiment_results_DER_based_triplet_loss.txt", prefix, stat_uncertainty)
 
 
 def create_weights_folder():

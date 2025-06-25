@@ -73,7 +73,7 @@ class BatchSampler(Sampler):
         for batch in self.batch_idx:
             yield batch
 
-    def __len(self):
+    def __len__(self):
         return len(self.batch_idx)
 
     def expand_batch(self):

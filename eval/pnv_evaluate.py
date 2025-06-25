@@ -3,6 +3,14 @@
 # Evaluation using PointNetVLAD evaluation protocol and test sets
 # Evaluation code adapted from PointNetVlad code: https://github.com/mikacuy/pointnetvlad
 
+import sys
+import os
+
+script_dir = os.path.dirname(__file__)
+project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 from sklearn.neighbors import KDTree
 import numpy as np
 import pickle
@@ -246,19 +254,19 @@ if __name__ == "__main__":
     parser.add_argument('--log', dest='log', action='store_true')
     parser.set_defaults(log=False)
 
-    args = parser.parse_args()
-    print('Config path: {}'.format(args.config))
-    print('Model config path: {}'.format(args.model_config))
-    if args.weights is None:
-        w = 'RANDOM WEIGHTS'
-    else:
-        w = args.weights
-    print('Weights: {}'.format(w))
-    print('Debug mode: {}'.format(args.debug))
-    print('Log search results: {}'.format(args.log))
-    print('')
+    parser.add_argument('--data_path', type=str, default=None, help='Path to the dataset folder (optional)')
 
-    params = TrainingParams(args.config, args.model_config, debug=args.debug)
+
+    args = parser.parse_args()
+    print(f"Config path: {args.config}")
+    print(f"Model config path: {args.model_config}")
+    print(f"Weights: {args.weights}\n")
+
+    params = TrainingParams(args.config, args.model_config, dataset_folder_override=args.data_path)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Using device: {device}")
+
+    params = TrainingParams(args.config, args.model_config, dataset_folder_override=args.data_path)
     params.print()
 
     if torch.cuda.is_available():
@@ -284,5 +292,5 @@ if __name__ == "__main__":
     model_name = os.path.split(args.weights)[1]
     model_name = os.path.splitext(model_name)[0]
     prefix = "{}, {}, {}".format(model_params_name, config_name, model_name)
-    pnv_write_eval_stats("pnv_experiment_results.txt", prefix, stats)
+    pnv_write_eval_stats("./outputs/pnv_experiment_results.txt", prefix, stats)
 

@@ -75,7 +75,7 @@ class DerTripletMarginLoss(BaseMetricLossFunction):
         swap=False,
         smooth_loss=False,
         triplets_per_anchor="all",
-        der_lambda=0.01,
+        der_lambda=0.1,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -84,7 +84,7 @@ class DerTripletMarginLoss(BaseMetricLossFunction):
         self.smooth_loss = smooth_loss
         self.triplets_per_anchor = triplets_per_anchor
         self.add_to_recordable_attributes(list_of_names=["margin"], is_stat=False)
-        self.lambda_der = der_lambda
+        self.der_lambda = der_lambda
     
     def forward(
         self,
@@ -216,7 +216,7 @@ class DerTripletMarginLoss(BaseMetricLossFunction):
         # ------ Total Loss DER-TR ------
         # L_DER^TR = phi_ML^TR + lambda * phi_R^TR (dagli appunti)
 
-        total_violation = loss_nll_tr + self.lambda_der * loss_reg_tr
+        total_violation = loss_nll_tr + self.der_lambda * loss_reg_tr
 
         if self.smooth_loss:
             loss = torch.nn.functional.softplus(total_violation)

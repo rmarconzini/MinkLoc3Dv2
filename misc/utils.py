@@ -99,7 +99,7 @@ class TrainingParams:
 
         config.read(self.params_path)
         params = config['DEFAULT']
-        # Override dataset_folder con valore da CLI se fornito
+        # Override dataset_folder with the one provided by the user
         if dataset_folder_override is not None:
             self.dataset_folder = dataset_folder_override
         else:
@@ -126,6 +126,9 @@ class TrainingParams:
         else:
             self.batch_size_limit = self.batch_size
             self.batch_expansion_rate = None
+        
+        # Set gradient_accumulation_steps to enable gradient accumulation
+        self.gradient_accumulation_steps = params.getint('gradient_accumulation_steps', 1)
 
         self.val_batch_size = params.getint('val_batch_size', self.batch_size_limit)
 

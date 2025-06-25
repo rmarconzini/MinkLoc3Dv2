@@ -1,0 +1,15 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+
+experiment_name: evaluation_minkloc3dv2-DER-uncertainty
+description: "MinkLoc3Dv2-DER evaluation"
+
+code: .
+command: python eval/pnv_evaluate_der.py --config azure/run/teal_leaf_4p2fyrfnpx/config_baseline_v2.txt --model_config azure/run/teal_leaf_4p2fyrfnpx/minkloc3dv2_der.txt --weights azure/run/teal_leaf_4p2fyrfnpx/outputs/model_MinkLocEvd_20250623_0818_final.pth --data_path ${{inputs.input_data}}
+
+inputs:
+  input_data:
+    type: uri_folder
+    path: azureml:dataset:1
+
+environment: azureml:MinkowskiEngine-py38@latest
+compute: azureml:T4x1-28G
