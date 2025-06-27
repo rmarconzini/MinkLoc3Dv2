@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 
 code: .
-command: python training/train.py --config config/config_der/config.txt --model_config models/config/model.txt --data_path ${{inputs.input_data}}
+command: python training/train.py --config config/config.txt --model_config models/config/model.txt --data_path ${{inputs.input_data}}
 
 inputs:
   input_data:

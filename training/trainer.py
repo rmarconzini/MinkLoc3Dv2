@@ -209,7 +209,7 @@ def do_train(params: TrainingParams):
     model_params_dict = {"model_params." + e: params.model_params.__dict__[e] for e in params.model_params.__dict__}
     params_dict.update(model_params_dict)
     wandb.init(
-        project='MinkLoc2',
+        project='MinkLoc3D-EvD',
         config=params_dict,
         mode=os.getenv("WANDB_MODE", "offline"),
         dir=os.getenv("AZUREML_OUTPUT_DIR", "./wandb_logs"))
@@ -337,9 +337,12 @@ def do_train(params: TrainingParams):
     stats = evaluate(model, device, params, log=False)
     print("--- STANDARD EVALUATION RESULTS ---")
     print_eval_stats(stats)
+    log_recall_to_wandb(stats, prefix="standard_eval/")
     stat_uncertainty = evaluate_der(model, device, params)
+    log_der_to_wandb(stat_uncertainty)
     print("--- UNCERTAINTY EVALUATION RESULTS ---")
     print_eval_stats(stat_uncertainty)
+    log_der_to_wandb(stat_uncertainty, prefix="uncertainty_eval/")
 
     print('.')
 
@@ -357,3 +360,46 @@ def create_weights_folder():
     output_dir = './outputs'
     os.makedirs(output_dir, exist_ok=True)
     return output_dir
+
+
+def log_recall_to_wandb(stats, prefix="standard_eval/"):
+    for dataset_name, dataset_stats in stats.items():
+        recalls = dataset_stats['ave_recall']
+        wandb.log({
+            f"{prefix}{dataset_name}/avg_1%_recall": dataset_stats['ave_one_percent_recall'],
+            f"{prefix}{dataset_name}/recall@1": recalls[0],
+            f"{prefix}{dataset_name}/recall_curve": wandb.plot.line_series(
+                xs=list(range(1, len(recalls)+1)),
+                ys=[recalls],
+                keys=["recall@N"],
+                title=f"{dataset_name} Recall@N",
+                xname="N"
+            )
+        })
+
+
+def log_der_to_wandb(stats, prefix="uncertainty_eval/"):
+    import re
+    import wandb
+
+    for dataset_key, dataset_stats in stats.items():
+        # Expected format: "oxford_100%", "oxford_90%", etc.
+        match = re.match(r"(.+?)_(\d+)%", dataset_key)
+        if not match:
+            continue
+        dataset_name, keep_pct = match.groups()
+
+        recall_curve = dataset_stats["ave_recall"]
+        one_percent_recall = dataset_stats["ave_one_percent_recall"]
+        recall_at_1 = recall_curve[0] if len(recall_curve) > 0 else None
+
+        log_dict = {
+            f"{prefix}{dataset_name}/1p_recall@{keep_pct}%": one_percent_recall,
+            f"{prefix}{dataset_name}/recall@1@{keep_pct}%": recall_at_1,
+        }
+
+        # (Opzionale) aggiunta della curva completa Recall@N come array
+        for i, val in enumerate(recall_curve):
+            log_dict[f"{prefix}{dataset_name}/recall@{i+1}@{keep_pct}%"] = val
+
+        wandb.log(log_dict)

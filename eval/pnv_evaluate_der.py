@@ -21,10 +21,27 @@ from models.model_factory import model_factory
 from misc.utils import TrainingParams
 from datasets.pointnetvlad.pnv_raw import PNVPointCloudLoader
 
+import wandb
+
+
+if "WANDB_API_KEY" in os.environ:
+    wandb.login(key=os.environ["WANDB_API_KEY"], relogin=True)
+
 PERCENTAGE_TO_REMOVE_STEP = 0.1
 NUM_NEIGHBORS = 25
 
 def evaluate_der(model, device, params: TrainingParams, log: bool = False, show_progress: bool = False):
+
+
+    params_dict = {e: params.__dict__[e] for e in params.__dict__ if e != 'model_params'}
+    model_params_dict = {"model_params." + e: params.model_params.__dict__[e] for e in params.model_params.__dict__}
+    params_dict.update(model_params_dict)
+
+    wandb.init(
+        project='MinkLoc3D-EvD-Eval',
+        config=params_dict,
+        mode=os.getenv("WANDB_MODE", "offline"),
+        dir=os.getenv("AZUREML_OUTPUT_DIR", "./wandb_logs"))
 
     eval_database_files = ['oxford_evaluation_database.pickle', 'university_evaluation_database.pickle',
                            'residential_evaluation_database.pickle', 'business_evaluation_database.pickle']
@@ -36,8 +53,6 @@ def evaluate_der(model, device, params: TrainingParams, log: bool = False, show_
     all_stats = {}
     for database_file, query_file in zip(eval_database_files, eval_query_files):
         location_name = database_file.split('_')[0]
-        print(f"\n----- Evaluating {location_name} -----")
-
         with open(os.path.join(params.dataset_folder, database_file), 'rb') as f:
             database_sets = pickle.load(f)
         with open(os.path.join(params.dataset_folder, query_file), 'rb') as f:
@@ -194,6 +209,32 @@ def pnv_write_eval_stats(file_name, prefix, stats):
         s += ", {:0.2f}, {:0.2f}\n".format(mean_1p_recall, mean_recall)
         f.write(s)
 
+def log_der_to_wandb(stats, prefix="uncertainty_eval/"):
+    import re
+    import wandb
+
+    for dataset_key, dataset_stats in stats.items():
+        # Expected format: "oxford_100%", "oxford_90%", etc.
+        match = re.match(r"(.+?)_(\d+)%", dataset_key)
+        if not match:
+            continue
+        dataset_name, keep_pct = match.groups()
+
+        recall_curve = dataset_stats["ave_recall"]
+        one_percent_recall = dataset_stats["ave_one_percent_recall"]
+        recall_at_1 = recall_curve[0] if len(recall_curve) > 0 else None
+
+        log_dict = {
+            f"{prefix}{dataset_name}/1p_recall@{keep_pct}%": one_percent_recall,
+            f"{prefix}{dataset_name}/recall@1@{keep_pct}%": recall_at_1,
+        }
+
+        # (Opzionale) aggiunta della curva completa Recall@N come array
+        for i, val in enumerate(recall_curve):
+            log_dict[f"{prefix}{dataset_name}/recall@{i+1}@{keep_pct}%"] = val
+
+        wandb.log(log_dict)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Evaluate uncertainty-aware model on PointNetVLAD datasets')
     parser.add_argument('--config', type=str, required=True, help='Path to configuration file')
@@ -217,6 +258,7 @@ if __name__ == "__main__":
 
     stats = evaluate_der(model, device, params, show_progress=False)
     print_eval_stats(stats)
+    log_der_to_wandb(stats)
 
     model_params_name = os.path.split(params.model_params.model_params_path)[1]
     config_name = os.path.split(params.params_path)[1]
@@ -224,4 +266,4 @@ if __name__ == "__main__":
     model_name = os.path.splitext(model_name)[0]    
     prefix = "{}, {}, {}".format(model_params_name, config_name, model_name)
 
-    pnv_write_eval_stats("./outputs/pnv_experiment_results_DER_based_triplet_loss.txt", prefix, stats)
+    # pnv_write_eval_stats("./outputs/pnv_experiment_results_DER_based_triplet_loss.txt", prefix, stats)

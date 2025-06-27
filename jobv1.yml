@@ -1,0 +1,15 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+
+code: .
+command: python training/train.py --config config/config_der/v1/config_baseline_v1.txt --model_config models/config/config_der/v1/minkloc3dv1_der.txt --data_path ${{inputs.input_data}}
+
+inputs:
+  input_data:
+    type: uri_folder
+    path: azureml:dataset:1
+
+environment: azureml:MinkowskiEngine-py38@latest
+compute: azureml:T4x1-28G
+
+experiment_name: training_minkloc3dv2-DER
+description: "Training MinkLoc3Dv2 model on Oxford RobotCar dataset with DER"

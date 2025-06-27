@@ -25,8 +25,24 @@ from models.model_factory import model_factory
 from misc.utils import TrainingParams
 from datasets.pointnetvlad.pnv_raw import PNVPointCloudLoader
 
+import wandb
+
+if "WANDB_API_KEY" in os.environ:
+    wandb.login(key=os.environ["WANDB_API_KEY"])
+
 
 def evaluate(model, device, params: TrainingParams, log: bool = False, show_progress: bool = False):
+
+    params_dict = {e: params.__dict__[e] for e in params.__dict__ if e != 'model_params'}
+    model_params_dict = {"model_params." + e: params.model_params.__dict__[e] for e in params.model_params.__dict__}
+    params_dict.update(model_params_dict)
+
+    wandb.init(
+        project='MinkLoc3D-EvD-Eval',
+        config=params_dict,
+        mode=os.getenv("WANDB_MODE", "offline"),
+        dir=os.getenv("AZUREML_OUTPUT_DIR", "./wandb_logs"))
+
     # Run evaluation on all eval datasets
 
     eval_database_files = ['oxford_evaluation_database.pickle', 'university_evaluation_database.pickle',
@@ -241,6 +257,21 @@ def pnv_write_eval_stats(file_name, prefix, stats):
         s += ", {:0.2f}, {:0.2f}\n".format(mean_1p_recall, mean_recall)
         f.write(s)
 
+def log_recall_to_wandb(stats, prefix="standard_eval/"):
+    for dataset_name, dataset_stats in stats.items():
+        recalls = dataset_stats['ave_recall']
+        wandb.log({
+            f"{prefix}{dataset_name}/avg_1%_recall": dataset_stats['ave_one_percent_recall'],
+            f"{prefix}{dataset_name}/recall@1": recalls[0],
+            f"{prefix}{dataset_name}/recall_curve": wandb.plot.line_series(
+                xs=list(range(1, len(recalls)+1)),
+                ys=[recalls],
+                keys=["recall@N"],
+                title=f"{dataset_name} Recall@N",
+                xname="N"
+            )
+        })
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Evaluate model on PointNetVLAD (Oxford) dataset')
@@ -285,6 +316,8 @@ if __name__ == "__main__":
 
     stats = evaluate(model, device, params, args.log, show_progress=True)
     print_eval_stats(stats)
+
+    log_recall_to_wandb(stats)
 
     # Save results to the text file
     model_params_name = os.path.split(params.model_params.model_params_path)[1]
