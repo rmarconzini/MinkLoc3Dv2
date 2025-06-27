@@ -1,6 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 
-# Nome del job per l'esperimento
 experiment_name: evaluation_minkloc3dv2-DER-uncertainty
 description: "MinkLoc3Dv2-DER evaluation"
 

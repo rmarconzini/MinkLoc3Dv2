@@ -133,3 +133,4 @@ models/config/config_der/*
 /outputs/*
 
 .vscode/*
+.DS_Store
