@@ -257,20 +257,46 @@ def pnv_write_eval_stats(file_name, prefix, stats):
         s += ", {:0.2f}, {:0.2f}\n".format(mean_1p_recall, mean_recall)
         f.write(s)
 
-def log_recall_to_wandb(stats, prefix="standard_eval/"):
+def log_standard_eval_to_wandb(stats, prefix="standard_eval/"):
+    """
+    Logga i risultati della valutazione standard su W&B come richiesto:
+    1. Grafico Recall@N vs N per ogni dataset.
+    2. Grafico a barre per Avg top 1% recall.
+    3. Tabella riassuntiva.
+    """
     for dataset_name, dataset_stats in stats.items():
         recalls = dataset_stats['ave_recall']
+        n_values = list(range(1, len(recalls) + 1))
+        
         wandb.log({
-            f"{prefix}{dataset_name}/avg_1%_recall": dataset_stats['ave_one_percent_recall'],
-            f"{prefix}{dataset_name}/recall@1": recalls[0],
-            f"{prefix}{dataset_name}/recall_curve": wandb.plot.line_series(
-                xs=list(range(1, len(recalls)+1)),
-                ys=[recalls],
-                keys=["recall@N"],
-                title=f"{dataset_name} Recall@N",
-                xname="N"
+            f"{prefix}{dataset_name}/Recall_Curve": wandb.plot.line(
+                wandb.Table(data=[[n, r] for n, r in zip(n_values, recalls)], columns=["N", "Recall"]),
+                "N",
+                "Recall",
+                title=f"{dataset_name}: Recall@N"
             )
         })
+
+    dataset_names = list(stats.keys())
+    avg_one_percent_recalls = [stats[ds]['ave_one_percent_recall'] for ds in dataset_names]
+    
+    bar_table = wandb.Table(data=[[name, recall] for name, recall in zip(dataset_names, avg_one_percent_recalls)],
+                            columns=["Dataset", "Avg top 1% Recall"])
+    
+    wandb.log({
+        f"{prefix}Avg_Top_1_Percent_Recall_Comparison": wandb.plot.bar(
+            bar_table, "Dataset", "Avg top 1% Recall", title="Avg top 1% Recall Comparison"
+        )
+    })
+
+    columns = ["Dataset", "Avg top 1% Recall"] + [f"Recall@{i}" for i in range(1, 26)]
+    summary_table = wandb.Table(columns=columns)
+
+    for dataset_name, dataset_stats in stats.items():
+        row = [dataset_name, dataset_stats['ave_one_percent_recall']] + list(dataset_stats['ave_recall'])
+        summary_table.add_data(*row)
+        
+    wandb.log({f"{prefix}Summary_Table": summary_table})
 
 
 if __name__ == "__main__":
@@ -314,16 +340,16 @@ if __name__ == "__main__":
 
     model.to(device)
 
-    stats = evaluate(model, device, params, args.log, show_progress=True)
+    stats = evaluate(model, device, params, show_progress=True)
     print_eval_stats(stats)
 
-    log_recall_to_wandb(stats)
+    log_standard_eval_to_wandb(stats)
 
     # Save results to the text file
-    model_params_name = os.path.split(params.model_params.model_params_path)[1]
-    config_name = os.path.split(params.params_path)[1]
-    model_name = os.path.split(args.weights)[1]
-    model_name = os.path.splitext(model_name)[0]
-    prefix = "{}, {}, {}".format(model_params_name, config_name, model_name)
-    pnv_write_eval_stats("./outputs/pnv_experiment_results.txt", prefix, stats)
+    # model_params_name = os.path.split(params.model_params.model_params_path)[1]
+    # config_name = os.path.split(params.params_path)[1]
+    # model_name = os.path.split(args.weights)[1]
+    # model_name = os.path.splitext(model_name)[0]
+    # prefix = "{}, {}, {}".format(model_params_name, config_name, model_name)
+    # pnv_write_eval_stats("./outputs/pnv_experiment_results.txt", prefix, stats)
 

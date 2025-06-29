@@ -1,0 +1,713 @@
+wandb: Currently logged in as: r-marconzini (r-marconzini-universit-degli-studi-di-milano-bicocca). Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /root/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /root/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /root/.netrc
+wandb: WARNING Path ./wandb_logs/wandb/ wasn't writable, using system temp directory.
+wandb: WARNING Path ./wandb_logs/wandb/ wasn't writable, using system temp directory
+wandb: wandb version 0.20.1 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.4
+wandb: Run data is saved locally in /tmp/wandb/run-20250628_135809-5dvvzb15
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run playful-frog-8
+wandb: ⭐️ View project at https://wandb.ai/r-marconzini-universit-degli-studi-di-milano-bicocca/MinkLoc3D-EvD
+wandb: 🚀 View run at https://wandb.ai/r-marconzini-universit-degli-studi-di-milano-bicocca/MinkLoc3D-EvD/runs/5dvvzb15
+Training config path: config/exps/lambda/config07.txt
+Model config path: models/config/exps/v2.txt
+Debug mode: False
+Parameters:
+params_path: config/exps/lambda/config07.txt
+model_params_path: models/config/exps/v2.txt
+debug: False
+dataset_folder: /mnt/azureml/cr/j/0f30672b0d7e4afcb3713c53b0302bb3/cap/data-capability/wd/INPUT_input_data
+save_freq: 0
+num_workers: 4
+batch_size: 16
+batch_split_size: None
+batch_expansion_th: 0.7
+batch_size_limit: 256
+batch_expansion_rate: 1.4
+gradient_accumulation_steps: 1
+val_batch_size: 256
+lr: 0.001
+epochs: 150
+optimizer: Adam
+scheduler: MultiStepLR
+scheduler_milestones: [10, 30]
+weight_decay: 0.001
+loss: der
+margin: 0.2
+der_lambda: 0.7
+similarity: euclidean
+aug_mode: 1
+set_aug_mode: 1
+train_file: training_queries_baseline_v2.pickle
+val_file: test_queries_baseline_v2.pickle
+test_file: None
+Model parameters:
+model_params_path: models/config/exps/v2.txt
+model: MinkLocEvd
+output_dim: 256
+coordinates: cartesian
+quantization_step: 0.01 [m]
+quantizer: <datasets.quantization.CartesianQuantizer object at 0xfccce39d0a0>
+normalize_embeddings: False
+feature_size: 256
+planes: (64, 128, 64, 32)
+layers: (1, 1, 1, 1)
+num_top_down: 2
+conv0_kernel_size: 5
+block: ECABasicBlock
+pooling: GeM
+
+
+Model name: model_MinkLocEvd_20250628_1358
+Model class: MinkLocEvd (MinkLoc with Evidential Regression Head)
+Total parameters: 2926735
+Backbone: MinkFPN #parameters: 2663566
+Pooling method: GeM   #parameters: 1
+Uncertainty Head (DenseNormalGamma) #parameters: 263168
+# channels from the backbone: 256
+# output channels (embedding_dim): 256
+Embedding normalization: False
+Model device: cuda
+21711 queries in the dataset
+9742 queries in the dataset
+  0%|          | 0/150 [00:00<?, ?it/s]train  loss: 0.5786   embedding norm: 7.565  Triplets (all/active): 16.0/12.1  Mean dist (pos/neg): 0.890/1.025   
+  1%|          | 1/150 [03:58<9:52:19, 238.52s/it]val  loss: 0.8629   embedding norm: 6.781  Triplets (all/active): 251.7/244.9  Mean dist (pos/neg): 0.960/0.749   
+train  loss: 0.5338   embedding norm: 6.947  Triplets (all/active): 16.0/9.7  Mean dist (pos/neg): 0.773/1.004   
+  1%|▏         | 2/150 [07:30<9:10:11, 223.05s/it]val  loss: 0.8603   embedding norm: 6.629  Triplets (all/active): 251.6/243.8  Mean dist (pos/neg): 0.852/0.678   
+=> Batch size increased from: 16 to 22
+train  loss: 0.5096   embedding norm: 6.049  Triplets (all/active): 22.0/12.7  Mean dist (pos/neg): 0.673/0.882   
+  2%|▏         | 3/150 [10:38<8:26:35, 206.77s/it]val  loss: 0.8031   embedding norm: 5.475  Triplets (all/active): 252.0/232.1  Mean dist (pos/neg): 0.770/0.673   
+=> Batch size increased from: 22 to 30
+train  loss: 0.5040   embedding norm: 4.561  Triplets (all/active): 30.0/16.3  Mean dist (pos/neg): 0.594/0.777   
+  3%|▎         | 4/150 [13:29<7:49:34, 192.97s/it]val  loss: 0.7323   embedding norm: 4.217  Triplets (all/active): 252.1/225.2  Mean dist (pos/neg): 0.632/0.587   
+=> Batch size increased from: 30 to 42
+train  loss: 0.4978   embedding norm: 3.366  Triplets (all/active): 42.0/21.6  Mean dist (pos/neg): 0.520/0.681   
+  3%|▎         | 5/150 [15:54<7:04:05, 175.49s/it]val  loss: 0.6942   embedding norm: 3.290  Triplets (all/active): 251.7/223.7  Mean dist (pos/neg): 0.528/0.502   
+=> Batch size increased from: 42 to 58
+train  loss: 0.4916   embedding norm: 2.765  Triplets (all/active): 57.9/30.1  Mean dist (pos/neg): 0.456/0.590   
+  4%|▍         | 6/150 [18:09<6:27:46, 161.57s/it]val  loss: 0.6761   embedding norm: 2.574  Triplets (all/active): 252.1/215.6  Mean dist (pos/neg): 0.453/0.446   
+=> Batch size increased from: 58 to 81
+train  loss: 0.4841   embedding norm: 2.123  Triplets (all/active): 81.8/43.5  Mean dist (pos/neg): 0.409/0.522   
+  5%|▍         | 7/150 [20:14<5:57:14, 149.89s/it]val  loss: 0.6288   embedding norm: 1.936  Triplets (all/active): 251.7/214.1  Mean dist (pos/neg): 0.407/0.408   
+=> Batch size increased from: 81 to 113
+train  loss: 0.4709   embedding norm: 1.861  Triplets (all/active): 113.7/62.4  Mean dist (pos/neg): 0.383/0.484   
+  5%|▌         | 8/150 [22:12<5:30:38, 139.70s/it]val  loss: 0.6292   embedding norm: 1.787  Triplets (all/active): 251.9/211.1  Mean dist (pos/neg): 0.396/0.402   
+=> Batch size increased from: 113 to 158
+train  loss: 0.4604   embedding norm: 1.754  Triplets (all/active): 157.1/89.1  Mean dist (pos/neg): 0.367/0.459   
+  6%|▌         | 9/150 [24:05<5:08:27, 131.26s/it]val  loss: 0.6381   embedding norm: 1.835  Triplets (all/active): 251.5/210.8  Mean dist (pos/neg): 0.376/0.380   
+=> Batch size increased from: 158 to 221
+train  loss: 0.4666   embedding norm: 1.722  Triplets (all/active): 220.5/136.4  Mean dist (pos/neg): 0.357/0.433   
+  7%|▋         | 10/150 [25:59<4:53:42, 125.88s/it]val  loss: 0.6042   embedding norm: 1.600  Triplets (all/active): 252.0/209.4  Mean dist (pos/neg): 0.366/0.377   
+=> Batch size increased from: 221 to 256
+train  loss: 0.4470   embedding norm: 1.607  Triplets (all/active): 253.8/157.3  Mean dist (pos/neg): 0.349/0.426   
+  7%|▋         | 11/150 [27:51<4:42:05, 121.77s/it]val  loss: 0.5765   embedding norm: 1.553  Triplets (all/active): 251.8/211.0  Mean dist (pos/neg): 0.354/0.368   
+train  loss: 0.4388   embedding norm: 1.561  Triplets (all/active): 253.9/147.2  Mean dist (pos/neg): 0.343/0.426   
+  8%|▊         | 12/150 [29:44<4:33:33, 118.94s/it]val  loss: 0.5877   embedding norm: 1.550  Triplets (all/active): 252.2/208.8  Mean dist (pos/neg): 0.353/0.367   
+train  loss: 0.4320   embedding norm: 1.573  Triplets (all/active): 253.7/145.3  Mean dist (pos/neg): 0.342/0.428   
+  9%|▊         | 13/150 [31:36<4:26:44, 116.82s/it]val  loss: 0.5829   embedding norm: 1.536  Triplets (all/active): 251.9/207.0  Mean dist (pos/neg): 0.349/0.364   
+train  loss: 0.4391   embedding norm: 1.550  Triplets (all/active): 253.8/143.4  Mean dist (pos/neg): 0.341/0.426   
+  9%|▉         | 14/150 [33:28<4:21:37, 115.42s/it]val  loss: 0.5934   embedding norm: 1.509  Triplets (all/active): 251.9/205.2  Mean dist (pos/neg): 0.350/0.365   
+train  loss: 0.4333   embedding norm: 1.544  Triplets (all/active): 253.6/140.2  Mean dist (pos/neg): 0.340/0.428   
+ 10%|█         | 15/150 [35:21<4:17:50, 114.60s/it]val  loss: 0.5888   embedding norm: 1.549  Triplets (all/active): 251.5/204.8  Mean dist (pos/neg): 0.350/0.365   
+train  loss: 0.4359   embedding norm: 1.570  Triplets (all/active): 253.7/135.4  Mean dist (pos/neg): 0.339/0.429   
+ 11%|█         | 16/150 [37:13<4:14:16, 113.85s/it]val  loss: 0.5871   embedding norm: 1.554  Triplets (all/active): 251.9/206.2  Mean dist (pos/neg): 0.347/0.361   
+train  loss: 0.4312   embedding norm: 1.571  Triplets (all/active): 253.7/133.8  Mean dist (pos/neg): 0.336/0.427   
+ 11%|█▏        | 17/150 [39:05<4:11:31, 113.47s/it]val  loss: 0.5840   embedding norm: 1.534  Triplets (all/active): 251.9/204.7  Mean dist (pos/neg): 0.345/0.361   
+train  loss: 0.4333   embedding norm: 1.542  Triplets (all/active): 253.7/128.7  Mean dist (pos/neg): 0.335/0.429   
+ 12%|█▏        | 18/150 [40:57<4:08:37, 113.01s/it]val  loss: 0.5980   embedding norm: 1.511  Triplets (all/active): 251.7/202.7  Mean dist (pos/neg): 0.347/0.362   
+train  loss: 0.4286   embedding norm: 1.547  Triplets (all/active): 253.7/126.3  Mean dist (pos/neg): 0.334/0.429   
+ 13%|█▎        | 19/150 [42:50<4:06:19, 112.82s/it]val  loss: 0.5898   embedding norm: 1.508  Triplets (all/active): 251.9/203.1  Mean dist (pos/neg): 0.342/0.358   
+train  loss: 0.4334   embedding norm: 1.527  Triplets (all/active): 253.8/126.9  Mean dist (pos/neg): 0.331/0.425   
+ 13%|█▎        | 20/150 [44:42<4:03:56, 112.59s/it]val  loss: 0.5935   embedding norm: 1.497  Triplets (all/active): 251.7/201.5  Mean dist (pos/neg): 0.340/0.357   
+train  loss: 0.4304   embedding norm: 1.526  Triplets (all/active): 253.7/123.3  Mean dist (pos/neg): 0.329/0.424   
+ 14%|█▍        | 21/150 [46:34<4:01:58, 112.54s/it]val  loss: 0.5911   embedding norm: 1.493  Triplets (all/active): 252.2/203.2  Mean dist (pos/neg): 0.336/0.352   
+train  loss: 0.4208   embedding norm: 1.524  Triplets (all/active): 253.8/117.3  Mean dist (pos/neg): 0.325/0.425   
+ 15%|█▍        | 22/150 [48:27<4:00:08, 112.57s/it]val  loss: 0.5996   embedding norm: 1.534  Triplets (all/active): 251.9/201.4  Mean dist (pos/neg): 0.338/0.354   
+train  loss: 0.4277   embedding norm: 1.554  Triplets (all/active): 253.9/117.6  Mean dist (pos/neg): 0.323/0.422   
+ 15%|█▌        | 23/150 [50:19<3:58:25, 112.64s/it]val  loss: 0.6023   embedding norm: 1.526  Triplets (all/active): 252.0/199.9  Mean dist (pos/neg): 0.334/0.351   
+train  loss: 0.4181   embedding norm: 1.541  Triplets (all/active): 253.8/112.0  Mean dist (pos/neg): 0.324/0.425   
+ 16%|█▌        | 24/150 [52:12<3:56:19, 112.53s/it]val  loss: 0.6163   embedding norm: 1.531  Triplets (all/active): 251.8/196.7  Mean dist (pos/neg): 0.339/0.356   
+train  loss: 0.4226   embedding norm: 1.549  Triplets (all/active): 254.1/111.2  Mean dist (pos/neg): 0.323/0.424   
+ 17%|█▋        | 25/150 [54:05<3:54:38, 112.63s/it]val  loss: 0.6082   embedding norm: 1.537  Triplets (all/active): 251.9/197.3  Mean dist (pos/neg): 0.336/0.354   
+train  loss: 0.4228   embedding norm: 1.596  Triplets (all/active): 253.9/108.0  Mean dist (pos/neg): 0.321/0.424   
+ 17%|█▋        | 26/150 [55:57<3:52:23, 112.45s/it]val  loss: 0.6098   embedding norm: 1.589  Triplets (all/active): 251.8/193.3  Mean dist (pos/neg): 0.333/0.352   
+train  loss: 0.4228   embedding norm: 1.586  Triplets (all/active): 254.0/108.2  Mean dist (pos/neg): 0.321/0.423   
+ 18%|█▊        | 27/150 [57:49<3:50:36, 112.49s/it]val  loss: 0.6164   embedding norm: 1.597  Triplets (all/active): 251.9/192.0  Mean dist (pos/neg): 0.333/0.352   
+train  loss: 0.4236   embedding norm: 1.608  Triplets (all/active): 254.0/106.7  Mean dist (pos/neg): 0.320/0.423   
+ 19%|█▊        | 28/150 [59:42<3:48:40, 112.46s/it]val  loss: 0.6165   embedding norm: 1.567  Triplets (all/active): 251.7/192.5  Mean dist (pos/neg): 0.331/0.350   
+train  loss: 0.4178   embedding norm: 1.603  Triplets (all/active): 254.0/96.9  Mean dist (pos/neg): 0.316/0.424   
+ 19%|█▉        | 29/150 [1:01:34<3:46:38, 112.38s/it]val  loss: 0.6139   embedding norm: 1.599  Triplets (all/active): 252.0/193.7  Mean dist (pos/neg): 0.328/0.345   
+train  loss: 0.4228   embedding norm: 1.577  Triplets (all/active): 254.0/100.1  Mean dist (pos/neg): 0.315/0.421   
+ 20%|██        | 30/150 [1:03:26<3:44:26, 112.22s/it]val  loss: 0.6290   embedding norm: 1.563  Triplets (all/active): 251.9/193.2  Mean dist (pos/neg): 0.331/0.348   
+train  loss: 0.4122   embedding norm: 1.580  Triplets (all/active): 253.9/98.4  Mean dist (pos/neg): 0.314/0.420   
+ 21%|██        | 31/150 [1:05:18<3:42:38, 112.26s/it]val  loss: 0.6146   embedding norm: 1.566  Triplets (all/active): 251.8/192.7  Mean dist (pos/neg): 0.328/0.347   
+train  loss: 0.4217   embedding norm: 1.577  Triplets (all/active): 254.0/93.8  Mean dist (pos/neg): 0.314/0.423   
+ 21%|██▏       | 32/150 [1:07:10<3:40:27, 112.10s/it]val  loss: 0.6190   embedding norm: 1.560  Triplets (all/active): 251.8/192.2  Mean dist (pos/neg): 0.326/0.345   
+train  loss: 0.4250   embedding norm: 1.572  Triplets (all/active): 253.9/99.6  Mean dist (pos/neg): 0.313/0.418   
+ 22%|██▏       | 33/150 [1:09:02<3:38:51, 112.24s/it]val  loss: 0.6129   embedding norm: 1.558  Triplets (all/active): 252.0/193.7  Mean dist (pos/neg): 0.325/0.343   
+train  loss: 0.4157   embedding norm: 1.572  Triplets (all/active): 253.9/96.4  Mean dist (pos/neg): 0.312/0.420   
+ 23%|██▎       | 34/150 [1:10:55<3:37:07, 112.31s/it]val  loss: 0.6045   embedding norm: 1.553  Triplets (all/active): 252.2/191.8  Mean dist (pos/neg): 0.325/0.344   
+train  loss: 0.4250   embedding norm: 1.575  Triplets (all/active): 253.7/96.8  Mean dist (pos/neg): 0.314/0.419   
+ 23%|██▎       | 35/150 [1:12:47<3:35:19, 112.35s/it]val  loss: 0.6205   embedding norm: 1.564  Triplets (all/active): 251.8/192.3  Mean dist (pos/neg): 0.326/0.343   
+train  loss: 0.4195   embedding norm: 1.574  Triplets (all/active): 253.9/92.2  Mean dist (pos/neg): 0.311/0.422   
+ 24%|██▍       | 36/150 [1:14:40<3:33:31, 112.38s/it]val  loss: 0.6127   embedding norm: 1.553  Triplets (all/active): 251.8/190.3  Mean dist (pos/neg): 0.323/0.343   
+train  loss: 0.4095   embedding norm: 1.567  Triplets (all/active): 253.8/91.1  Mean dist (pos/neg): 0.312/0.423   
+ 25%|██▍       | 37/150 [1:16:31<3:31:11, 112.14s/it]val  loss: 0.6175   embedding norm: 1.554  Triplets (all/active): 252.1/190.5  Mean dist (pos/neg): 0.324/0.344   
+train  loss: 0.4098   embedding norm: 1.566  Triplets (all/active): 253.8/90.9  Mean dist (pos/neg): 0.311/0.422   
+ 25%|██▌       | 38/150 [1:18:24<3:29:26, 112.20s/it]val  loss: 0.6209   embedding norm: 1.553  Triplets (all/active): 251.8/189.5  Mean dist (pos/neg): 0.325/0.345   
+train  loss: 0.4148   embedding norm: 1.567  Triplets (all/active): 254.0/95.9  Mean dist (pos/neg): 0.311/0.418   
+ 26%|██▌       | 39/150 [1:20:16<3:27:46, 112.31s/it]val  loss: 0.6176   embedding norm: 1.552  Triplets (all/active): 251.7/190.1  Mean dist (pos/neg): 0.324/0.343   
+train  loss: 0.4189   embedding norm: 1.562  Triplets (all/active): 253.9/90.0  Mean dist (pos/neg): 0.310/0.421   
+ 27%|██▋       | 40/150 [1:22:09<3:26:04, 112.40s/it]val  loss: 0.6066   embedding norm: 1.543  Triplets (all/active): 251.7/193.6  Mean dist (pos/neg): 0.322/0.341   
+train  loss: 0.4146   embedding norm: 1.559  Triplets (all/active): 253.8/93.7  Mean dist (pos/neg): 0.309/0.418   
+ 27%|██▋       | 41/150 [1:24:01<3:24:13, 112.42s/it]val  loss: 0.6126   embedding norm: 1.548  Triplets (all/active): 251.9/189.6  Mean dist (pos/neg): 0.323/0.343   
+train  loss: 0.4172   embedding norm: 1.559  Triplets (all/active): 253.8/89.7  Mean dist (pos/neg): 0.309/0.420   
+ 28%|██▊       | 42/150 [1:25:54<3:22:21, 112.43s/it]val  loss: 0.6056   embedding norm: 1.547  Triplets (all/active): 252.1/193.0  Mean dist (pos/neg): 0.322/0.340   
+train  loss: 0.4126   embedding norm: 1.561  Triplets (all/active): 253.8/91.5  Mean dist (pos/neg): 0.309/0.420   
+ 29%|██▊       | 43/150 [1:27:46<3:20:20, 112.34s/it]val  loss: 0.6223   embedding norm: 1.548  Triplets (all/active): 252.1/191.6  Mean dist (pos/neg): 0.323/0.341   
+train  loss: 0.4023   embedding norm: 1.566  Triplets (all/active): 253.9/92.2  Mean dist (pos/neg): 0.309/0.419   
+ 29%|██▉       | 44/150 [1:29:38<3:18:29, 112.35s/it]val  loss: 0.6202   embedding norm: 1.555  Triplets (all/active): 251.9/190.5  Mean dist (pos/neg): 0.322/0.341   
+train  loss: 0.4094   embedding norm: 1.571  Triplets (all/active): 253.9/87.5  Mean dist (pos/neg): 0.309/0.422   
+ 30%|███       | 45/150 [1:31:31<3:16:47, 112.45s/it]val  loss: 0.6292   embedding norm: 1.559  Triplets (all/active): 251.8/189.2  Mean dist (pos/neg): 0.323/0.341   
+train  loss: 0.4115   embedding norm: 1.570  Triplets (all/active): 253.9/87.1  Mean dist (pos/neg): 0.309/0.422   
+ 31%|███       | 46/150 [1:33:23<3:14:59, 112.49s/it]val  loss: 0.6180   embedding norm: 1.557  Triplets (all/active): 252.0/189.6  Mean dist (pos/neg): 0.321/0.341   
+train  loss: 0.4290   embedding norm: 1.570  Triplets (all/active): 254.0/91.0  Mean dist (pos/neg): 0.310/0.419   
+ 31%|███▏      | 47/150 [1:35:16<3:13:14, 112.56s/it]val  loss: 0.6105   embedding norm: 1.558  Triplets (all/active): 252.0/190.2  Mean dist (pos/neg): 0.320/0.340   
+train  loss: 0.4142   embedding norm: 1.572  Triplets (all/active): 254.0/90.3  Mean dist (pos/neg): 0.309/0.419   
+ 32%|███▏      | 48/150 [1:37:08<3:11:08, 112.44s/it]val  loss: 0.6199   embedding norm: 1.558  Triplets (all/active): 251.8/188.9  Mean dist (pos/neg): 0.321/0.341   
+train  loss: 0.4191   embedding norm: 1.570  Triplets (all/active): 253.8/90.3  Mean dist (pos/neg): 0.308/0.417   
+ 33%|███▎      | 49/150 [1:39:01<3:09:35, 112.63s/it]val  loss: 0.6255   embedding norm: 1.558  Triplets (all/active): 251.6/189.3  Mean dist (pos/neg): 0.321/0.340   
+train  loss: 0.4151   embedding norm: 1.567  Triplets (all/active): 254.0/88.5  Mean dist (pos/neg): 0.307/0.417   
+ 33%|███▎      | 50/150 [1:40:54<3:07:36, 112.56s/it]val  loss: 0.6195   embedding norm: 1.551  Triplets (all/active): 251.9/190.8  Mean dist (pos/neg): 0.319/0.338   
+train  loss: 0.4104   embedding norm: 1.565  Triplets (all/active): 253.8/88.5  Mean dist (pos/neg): 0.308/0.419   
+ 34%|███▍      | 51/150 [1:42:46<3:05:33, 112.46s/it]val  loss: 0.6302   embedding norm: 1.557  Triplets (all/active): 251.7/191.1  Mean dist (pos/neg): 0.323/0.340   
+train  loss: 0.4047   embedding norm: 1.567  Triplets (all/active): 254.0/86.6  Mean dist (pos/neg): 0.307/0.420   
+ 35%|███▍      | 52/150 [1:44:38<3:03:33, 112.38s/it]val  loss: 0.6127   embedding norm: 1.554  Triplets (all/active): 252.0/190.3  Mean dist (pos/neg): 0.320/0.339   
+train  loss: 0.4168   embedding norm: 1.568  Triplets (all/active): 253.9/87.8  Mean dist (pos/neg): 0.307/0.419   
+ 35%|███▌      | 53/150 [1:46:31<3:01:54, 112.52s/it]val  loss: 0.6207   embedding norm: 1.556  Triplets (all/active): 252.0/188.7  Mean dist (pos/neg): 0.321/0.340   
+train  loss: 0.4206   embedding norm: 1.565  Triplets (all/active): 253.8/83.7  Mean dist (pos/neg): 0.306/0.420   
+ 36%|███▌      | 54/150 [1:48:24<3:00:10, 112.61s/it]val  loss: 0.6097   embedding norm: 1.551  Triplets (all/active): 251.5/190.4  Mean dist (pos/neg): 0.320/0.339   
+train  loss: 0.4136   embedding norm: 1.564  Triplets (all/active): 253.8/89.1  Mean dist (pos/neg): 0.306/0.416   
+ 37%|███▋      | 55/150 [1:50:16<2:58:15, 112.58s/it]val  loss: 0.6124   embedding norm: 1.551  Triplets (all/active): 251.6/189.2  Mean dist (pos/neg): 0.318/0.338   
+train  loss: 0.4166   embedding norm: 1.564  Triplets (all/active): 253.9/90.2  Mean dist (pos/neg): 0.306/0.415   
+ 37%|███▋      | 56/150 [1:52:09<2:56:24, 112.60s/it]val  loss: 0.6230   embedding norm: 1.550  Triplets (all/active): 251.7/189.2  Mean dist (pos/neg): 0.319/0.338   
+train  loss: 0.4103   embedding norm: 1.562  Triplets (all/active): 253.9/88.9  Mean dist (pos/neg): 0.307/0.417   
+ 38%|███▊      | 57/150 [1:54:02<2:54:30, 112.58s/it]val  loss: 0.6283   embedding norm: 1.546  Triplets (all/active): 251.8/189.6  Mean dist (pos/neg): 0.320/0.338   
+train  loss: 0.4108   embedding norm: 1.559  Triplets (all/active): 253.7/85.7  Mean dist (pos/neg): 0.305/0.418   
+ 39%|███▊      | 58/150 [1:55:54<2:52:20, 112.40s/it]val  loss: 0.6125   embedding norm: 1.550  Triplets (all/active): 251.7/189.7  Mean dist (pos/neg): 0.318/0.338   
+train  loss: 0.4057   embedding norm: 1.564  Triplets (all/active): 253.8/84.3  Mean dist (pos/neg): 0.303/0.417   
+ 39%|███▉      | 59/150 [1:57:46<2:50:34, 112.47s/it]val  loss: 0.6150   embedding norm: 1.553  Triplets (all/active): 251.8/189.2  Mean dist (pos/neg): 0.316/0.336   
+train  loss: 0.4154   embedding norm: 1.571  Triplets (all/active): 253.9/86.8  Mean dist (pos/neg): 0.306/0.416   
+ 40%|████      | 60/150 [1:59:38<2:48:27, 112.31s/it]val  loss: 0.6184   embedding norm: 1.558  Triplets (all/active): 251.9/189.1  Mean dist (pos/neg): 0.319/0.338   
+train  loss: 0.4157   embedding norm: 1.569  Triplets (all/active): 253.8/87.1  Mean dist (pos/neg): 0.305/0.416   
+ 41%|████      | 61/150 [2:01:31<2:46:38, 112.34s/it]val  loss: 0.6265   embedding norm: 1.551  Triplets (all/active): 251.9/187.7  Mean dist (pos/neg): 0.321/0.340   
+train  loss: 0.4186   embedding norm: 1.561  Triplets (all/active): 254.1/88.0  Mean dist (pos/neg): 0.305/0.416   
+ 41%|████▏     | 62/150 [2:03:23<2:44:50, 112.40s/it]val  loss: 0.6350   embedding norm: 1.547  Triplets (all/active): 252.1/189.2  Mean dist (pos/neg): 0.319/0.337   
+train  loss: 0.4171   embedding norm: 1.554  Triplets (all/active): 253.9/83.7  Mean dist (pos/neg): 0.304/0.416   
+ 42%|████▏     | 63/150 [2:05:15<2:42:56, 112.38s/it]val  loss: 0.6266   embedding norm: 1.540  Triplets (all/active): 252.2/188.4  Mean dist (pos/neg): 0.318/0.337   
+train  loss: 0.4138   embedding norm: 1.550  Triplets (all/active): 253.7/88.8  Mean dist (pos/neg): 0.304/0.413   
+ 43%|████▎     | 64/150 [2:07:08<2:41:10, 112.45s/it]val  loss: 0.6259   embedding norm: 1.537  Triplets (all/active): 251.8/190.7  Mean dist (pos/neg): 0.318/0.336   
+train  loss: 0.4038   embedding norm: 1.552  Triplets (all/active): 253.7/83.7  Mean dist (pos/neg): 0.305/0.418   
+ 43%|████▎     | 65/150 [2:09:00<2:39:06, 112.31s/it]val  loss: 0.6360   embedding norm: 1.547  Triplets (all/active): 251.6/187.8  Mean dist (pos/neg): 0.320/0.339   
+train  loss: 0.4229   embedding norm: 1.554  Triplets (all/active): 253.8/89.6  Mean dist (pos/neg): 0.306/0.414   
+ 44%|████▍     | 66/150 [2:10:52<2:37:13, 112.30s/it]val  loss: 0.6348   embedding norm: 1.540  Triplets (all/active): 251.6/186.7  Mean dist (pos/neg): 0.318/0.337   
+train  loss: 0.4052   embedding norm: 1.553  Triplets (all/active): 253.6/84.1  Mean dist (pos/neg): 0.304/0.417   
+ 45%|████▍     | 67/150 [2:12:45<2:35:31, 112.43s/it]val  loss: 0.6303   embedding norm: 1.538  Triplets (all/active): 251.9/187.4  Mean dist (pos/neg): 0.318/0.337   
+train  loss: 0.4065   embedding norm: 1.552  Triplets (all/active): 254.0/81.7  Mean dist (pos/neg): 0.303/0.417   
+ 45%|████▌     | 68/150 [2:14:37<2:33:36, 112.40s/it]val  loss: 0.6275   embedding norm: 1.545  Triplets (all/active): 252.1/190.9  Mean dist (pos/neg): 0.318/0.336   
+train  loss: 0.4160   embedding norm: 1.558  Triplets (all/active): 253.7/79.0  Mean dist (pos/neg): 0.302/0.418   
+ 46%|████▌     | 69/150 [2:16:29<2:31:35, 112.29s/it]val  loss: 0.6223   embedding norm: 1.545  Triplets (all/active): 252.2/188.7  Mean dist (pos/neg): 0.316/0.335   
+train  loss: 0.4121   embedding norm: 1.560  Triplets (all/active): 253.9/80.5  Mean dist (pos/neg): 0.302/0.417   
+ 47%|████▋     | 70/150 [2:18:21<2:29:30, 112.13s/it]val  loss: 0.6287   embedding norm: 1.541  Triplets (all/active): 251.9/192.0  Mean dist (pos/neg): 0.316/0.333   
+train  loss: 0.4149   embedding norm: 1.554  Triplets (all/active): 253.9/81.9  Mean dist (pos/neg): 0.302/0.415   
+ 47%|████▋     | 71/150 [2:20:14<2:27:50, 112.29s/it]val  loss: 0.6262   embedding norm: 1.544  Triplets (all/active): 252.1/188.2  Mean dist (pos/neg): 0.315/0.334   
+train  loss: 0.4225   embedding norm: 1.556  Triplets (all/active): 253.9/80.1  Mean dist (pos/neg): 0.303/0.417   
+ 48%|████▊     | 72/150 [2:22:06<2:25:54, 112.24s/it]val  loss: 0.6327   embedding norm: 1.543  Triplets (all/active): 252.1/188.9  Mean dist (pos/neg): 0.316/0.334   
+train  loss: 0.4165   embedding norm: 1.557  Triplets (all/active): 253.7/81.0  Mean dist (pos/neg): 0.303/0.416   
+ 49%|████▊     | 73/150 [2:23:59<2:24:13, 112.38s/it]val  loss: 0.6389   embedding norm: 1.542  Triplets (all/active): 251.8/188.9  Mean dist (pos/neg): 0.317/0.334   
+train  loss: 0.4042   embedding norm: 1.556  Triplets (all/active): 253.7/78.9  Mean dist (pos/neg): 0.301/0.418   
+ 49%|████▉     | 74/150 [2:25:51<2:22:26, 112.45s/it]val  loss: 0.6367   embedding norm: 1.540  Triplets (all/active): 251.9/189.6  Mean dist (pos/neg): 0.318/0.336   
+train  loss: 0.4163   embedding norm: 1.548  Triplets (all/active): 253.8/83.9  Mean dist (pos/neg): 0.302/0.414   
+ 50%|█████     | 75/150 [2:27:43<2:20:22, 112.30s/it]val  loss: 0.6254   embedding norm: 1.543  Triplets (all/active): 251.9/188.6  Mean dist (pos/neg): 0.315/0.335   
+train  loss: 0.4162   embedding norm: 1.555  Triplets (all/active): 253.9/82.4  Mean dist (pos/neg): 0.302/0.415   
+ 51%|█████     | 76/150 [2:29:35<2:18:27, 112.26s/it]val  loss: 0.6247   embedding norm: 1.545  Triplets (all/active): 251.8/190.1  Mean dist (pos/neg): 0.316/0.335   
+train  loss: 0.4045   embedding norm: 1.555  Triplets (all/active): 253.7/74.7  Mean dist (pos/neg): 0.301/0.421   
+ 51%|█████▏    | 77/150 [2:31:27<2:16:24, 112.12s/it]val  loss: 0.6397   embedding norm: 1.548  Triplets (all/active): 251.9/185.8  Mean dist (pos/neg): 0.316/0.335   
+train  loss: 0.4073   embedding norm: 1.557  Triplets (all/active): 253.7/81.2  Mean dist (pos/neg): 0.302/0.415   
+ 52%|█████▏    | 78/150 [2:33:20<2:14:45, 112.30s/it]val  loss: 0.6401   embedding norm: 1.547  Triplets (all/active): 251.8/188.2  Mean dist (pos/neg): 0.316/0.333   
+train  loss: 0.4052   embedding norm: 1.558  Triplets (all/active): 253.9/76.0  Mean dist (pos/neg): 0.300/0.418   
+ 53%|█████▎    | 79/150 [2:35:13<2:13:14, 112.59s/it]val  loss: 0.6314   embedding norm: 1.548  Triplets (all/active): 251.8/186.7  Mean dist (pos/neg): 0.316/0.335   
+train  loss: 0.4169   embedding norm: 1.557  Triplets (all/active): 253.9/84.3  Mean dist (pos/neg): 0.303/0.413   
+ 53%|█████▎    | 80/150 [2:37:05<2:11:06, 112.38s/it]val  loss: 0.6288   embedding norm: 1.545  Triplets (all/active): 252.0/185.6  Mean dist (pos/neg): 0.315/0.335   
+train  loss: 0.4117   embedding norm: 1.550  Triplets (all/active): 253.9/79.6  Mean dist (pos/neg): 0.302/0.416   
+ 54%|█████▍    | 81/150 [2:38:58<2:09:21, 112.49s/it]val  loss: 0.6315   embedding norm: 1.539  Triplets (all/active): 251.8/184.9  Mean dist (pos/neg): 0.314/0.335   
+train  loss: 0.4173   embedding norm: 1.550  Triplets (all/active): 253.9/81.9  Mean dist (pos/neg): 0.301/0.413   
+ 55%|█████▍    | 82/150 [2:40:51<2:07:35, 112.57s/it]val  loss: 0.6273   embedding norm: 1.540  Triplets (all/active): 251.6/186.0  Mean dist (pos/neg): 0.314/0.334   
+train  loss: 0.4133   embedding norm: 1.553  Triplets (all/active): 254.0/76.9  Mean dist (pos/neg): 0.299/0.416   
+ 55%|█████▌    | 83/150 [2:42:43<2:05:41, 112.57s/it]val  loss: 0.6393   embedding norm: 1.545  Triplets (all/active): 252.1/188.5  Mean dist (pos/neg): 0.317/0.334   
+train  loss: 0.4153   embedding norm: 1.556  Triplets (all/active): 253.8/78.2  Mean dist (pos/neg): 0.300/0.416   
+ 56%|█████▌    | 84/150 [2:44:35<2:03:44, 112.49s/it]val  loss: 0.6305   embedding norm: 1.543  Triplets (all/active): 251.7/188.9  Mean dist (pos/neg): 0.313/0.332   
+train  loss: 0.4214   embedding norm: 1.558  Triplets (all/active): 254.0/83.8  Mean dist (pos/neg): 0.300/0.411   
+ 57%|█████▋    | 85/150 [2:46:28<2:02:02, 112.65s/it]val  loss: 0.6436   embedding norm: 1.548  Triplets (all/active): 252.2/188.7  Mean dist (pos/neg): 0.314/0.331   
+train  loss: 0.4108   embedding norm: 1.556  Triplets (all/active): 253.6/77.5  Mean dist (pos/neg): 0.299/0.414   
+ 57%|█████▋    | 86/150 [2:48:21<2:00:11, 112.68s/it]val  loss: 0.6391   embedding norm: 1.537  Triplets (all/active): 252.2/187.3  Mean dist (pos/neg): 0.315/0.333   
+train  loss: 0.4009   embedding norm: 1.548  Triplets (all/active): 253.9/78.5  Mean dist (pos/neg): 0.300/0.414   
+ 58%|█████▊    | 87/150 [2:50:13<1:58:11, 112.56s/it]val  loss: 0.6244   embedding norm: 1.535  Triplets (all/active): 251.7/188.2  Mean dist (pos/neg): 0.314/0.333   
+train  loss: 0.4087   embedding norm: 1.548  Triplets (all/active): 253.8/79.3  Mean dist (pos/neg): 0.299/0.414   
+ 59%|█████▊    | 88/150 [2:52:06<1:56:20, 112.59s/it]val  loss: 0.6426   embedding norm: 1.539  Triplets (all/active): 251.8/187.1  Mean dist (pos/neg): 0.315/0.333   
+train  loss: 0.4072   embedding norm: 1.549  Triplets (all/active): 253.7/71.5  Mean dist (pos/neg): 0.298/0.418   
+ 59%|█████▉    | 89/150 [2:53:59<1:54:31, 112.65s/it]val  loss: 0.6496   embedding norm: 1.542  Triplets (all/active): 251.9/188.1  Mean dist (pos/neg): 0.317/0.334   
+train  loss: 0.4115   embedding norm: 1.555  Triplets (all/active): 253.8/76.2  Mean dist (pos/neg): 0.300/0.416   
+ 60%|██████    | 90/150 [2:55:51<1:52:36, 112.61s/it]val  loss: 0.6378   embedding norm: 1.548  Triplets (all/active): 251.5/184.4  Mean dist (pos/neg): 0.313/0.333   
+train  loss: 0.4134   embedding norm: 1.560  Triplets (all/active): 254.1/78.6  Mean dist (pos/neg): 0.300/0.414   
+ 61%|██████    | 91/150 [2:57:44<1:50:43, 112.60s/it]val  loss: 0.6408   embedding norm: 1.545  Triplets (all/active): 252.1/185.1  Mean dist (pos/neg): 0.315/0.334   
+train  loss: 0.4172   embedding norm: 1.554  Triplets (all/active): 254.0/73.6  Mean dist (pos/neg): 0.299/0.416   
+ 61%|██████▏   | 92/150 [2:59:36<1:48:38, 112.39s/it]val  loss: 0.6430   embedding norm: 1.539  Triplets (all/active): 252.0/186.1  Mean dist (pos/neg): 0.313/0.331   
+train  loss: 0.4261   embedding norm: 1.546  Triplets (all/active): 253.7/76.6  Mean dist (pos/neg): 0.299/0.413   
+ 62%|██████▏   | 93/150 [3:01:29<1:46:50, 112.47s/it]val  loss: 0.6360   embedding norm: 1.534  Triplets (all/active): 251.9/186.2  Mean dist (pos/neg): 0.315/0.333   
+train  loss: 0.4115   embedding norm: 1.543  Triplets (all/active): 254.0/73.5  Mean dist (pos/neg): 0.297/0.415   
+ 63%|██████▎   | 94/150 [3:03:21<1:44:59, 112.50s/it]val  loss: 0.6376   embedding norm: 1.531  Triplets (all/active): 251.8/187.1  Mean dist (pos/neg): 0.312/0.330   
+train  loss: 0.4137   embedding norm: 1.538  Triplets (all/active): 254.0/76.6  Mean dist (pos/neg): 0.298/0.413   
+ 63%|██████▎   | 95/150 [3:05:14<1:43:10, 112.56s/it]val  loss: 0.6371   embedding norm: 1.525  Triplets (all/active): 251.9/188.6  Mean dist (pos/neg): 0.312/0.330   
+train  loss: 0.4041   embedding norm: 1.539  Triplets (all/active): 254.0/79.8  Mean dist (pos/neg): 0.299/0.411   
+ 64%|██████▍   | 96/150 [3:07:06<1:41:06, 112.34s/it]val  loss: 0.6243   embedding norm: 1.529  Triplets (all/active): 251.8/188.0  Mean dist (pos/neg): 0.313/0.332   
+train  loss: 0.4068   embedding norm: 1.541  Triplets (all/active): 253.9/75.8  Mean dist (pos/neg): 0.297/0.414   
+ 65%|██████▍   | 97/150 [3:08:58<1:39:11, 112.29s/it]val  loss: 0.6432   embedding norm: 1.535  Triplets (all/active): 251.8/186.1  Mean dist (pos/neg): 0.314/0.332   
+train  loss: 0.4196   embedding norm: 1.548  Triplets (all/active): 253.8/75.4  Mean dist (pos/neg): 0.299/0.413   
+ 65%|██████▌   | 98/150 [3:10:50<1:37:23, 112.37s/it]val  loss: 0.6409   embedding norm: 1.536  Triplets (all/active): 251.7/184.5  Mean dist (pos/neg): 0.311/0.330   
+train  loss: 0.4168   embedding norm: 1.550  Triplets (all/active): 253.7/80.9  Mean dist (pos/neg): 0.299/0.411   
+ 66%|██████▌   | 99/150 [3:12:43<1:35:34, 112.45s/it]val  loss: 0.6375   embedding norm: 1.537  Triplets (all/active): 251.7/186.5  Mean dist (pos/neg): 0.312/0.331   
+train  loss: 0.4166   embedding norm: 1.553  Triplets (all/active): 253.8/76.6  Mean dist (pos/neg): 0.297/0.412   
+ 67%|██████▋   | 100/150 [3:14:36<1:33:44, 112.48s/it]val  loss: 0.6320   embedding norm: 1.542  Triplets (all/active): 251.7/186.7  Mean dist (pos/neg): 0.311/0.331   
+train  loss: 0.4005   embedding norm: 1.550  Triplets (all/active): 253.7/71.8  Mean dist (pos/neg): 0.296/0.415   
+ 67%|██████▋   | 101/150 [3:16:28<1:31:48, 112.43s/it]val  loss: 0.6379   embedding norm: 1.538  Triplets (all/active): 251.9/187.6  Mean dist (pos/neg): 0.312/0.330   
+train  loss: 0.4126   embedding norm: 1.551  Triplets (all/active): 253.6/74.7  Mean dist (pos/neg): 0.298/0.414   
+ 68%|██████▊   | 102/150 [3:18:20<1:29:54, 112.39s/it]val  loss: 0.6423   embedding norm: 1.544  Triplets (all/active): 251.8/184.0  Mean dist (pos/neg): 0.311/0.330   
+train  loss: 0.4114   embedding norm: 1.552  Triplets (all/active): 253.9/71.8  Mean dist (pos/neg): 0.296/0.415   
+ 69%|██████▊   | 103/150 [3:20:13<1:28:07, 112.50s/it]val  loss: 0.6425   embedding norm: 1.542  Triplets (all/active): 252.2/184.1  Mean dist (pos/neg): 0.313/0.331   
+train  loss: 0.4143   embedding norm: 1.553  Triplets (all/active): 253.9/69.5  Mean dist (pos/neg): 0.297/0.417   
+ 69%|██████▉   | 104/150 [3:22:05<1:26:11, 112.42s/it]val  loss: 0.6408   embedding norm: 1.538  Triplets (all/active): 252.4/185.0  Mean dist (pos/neg): 0.311/0.330   
+train  loss: 0.4103   embedding norm: 1.547  Triplets (all/active): 253.9/70.7  Mean dist (pos/neg): 0.297/0.416   
+ 70%|███████   | 105/150 [3:23:57<1:24:15, 112.34s/it]val  loss: 0.6476   embedding norm: 1.533  Triplets (all/active): 251.9/184.9  Mean dist (pos/neg): 0.312/0.330   
+train  loss: 0.4079   embedding norm: 1.544  Triplets (all/active): 253.9/74.0  Mean dist (pos/neg): 0.297/0.415   
+ 71%|███████   | 106/150 [3:25:50<1:22:30, 112.50s/it]val  loss: 0.6528   embedding norm: 1.534  Triplets (all/active): 251.7/186.6  Mean dist (pos/neg): 0.312/0.329   
+train  loss: 0.4070   embedding norm: 1.547  Triplets (all/active): 253.9/74.6  Mean dist (pos/neg): 0.297/0.412   
+ 71%|███████▏  | 107/150 [3:27:43<1:20:44, 112.65s/it]val  loss: 0.6398   embedding norm: 1.535  Triplets (all/active): 251.8/188.9  Mean dist (pos/neg): 0.313/0.329   
+train  loss: 0.4097   embedding norm: 1.545  Triplets (all/active): 253.6/75.4  Mean dist (pos/neg): 0.297/0.411   
+ 72%|███████▏  | 108/150 [3:29:36<1:18:47, 112.56s/it]val  loss: 0.6437   embedding norm: 1.539  Triplets (all/active): 251.6/183.3  Mean dist (pos/neg): 0.310/0.330   
+train  loss: 0.4100   embedding norm: 1.548  Triplets (all/active): 253.8/72.4  Mean dist (pos/neg): 0.296/0.413   
+ 73%|███████▎  | 109/150 [3:31:28<1:16:54, 112.55s/it]val  loss: 0.6465   embedding norm: 1.542  Triplets (all/active): 251.9/185.1  Mean dist (pos/neg): 0.313/0.331   
+train  loss: 0.4062   embedding norm: 1.550  Triplets (all/active): 253.9/75.9  Mean dist (pos/neg): 0.296/0.411   
+ 73%|███████▎  | 110/150 [3:33:21<1:15:07, 112.68s/it]val  loss: 0.6484   embedding norm: 1.540  Triplets (all/active): 252.0/185.4  Mean dist (pos/neg): 0.312/0.330   
+train  loss: 0.4134   embedding norm: 1.552  Triplets (all/active): 254.0/70.6  Mean dist (pos/neg): 0.296/0.416   
+ 74%|███████▍  | 111/150 [3:35:14<1:13:12, 112.63s/it]val  loss: 0.6572   embedding norm: 1.543  Triplets (all/active): 251.7/186.8  Mean dist (pos/neg): 0.314/0.330   
+train  loss: 0.4015   embedding norm: 1.547  Triplets (all/active): 253.7/68.9  Mean dist (pos/neg): 0.295/0.415   
+ 75%|███████▍  | 112/150 [3:37:06<1:11:16, 112.54s/it]val  loss: 0.6391   embedding norm: 1.538  Triplets (all/active): 251.7/184.2  Mean dist (pos/neg): 0.310/0.330   
+train  loss: 0.4164   embedding norm: 1.546  Triplets (all/active): 253.9/74.8  Mean dist (pos/neg): 0.297/0.412   
+ 75%|███████▌  | 113/150 [3:38:59<1:09:25, 112.57s/it]val  loss: 0.6442   embedding norm: 1.533  Triplets (all/active): 251.7/186.8  Mean dist (pos/neg): 0.313/0.330   
+train  loss: 0.4169   embedding norm: 1.543  Triplets (all/active): 253.9/69.6  Mean dist (pos/neg): 0.296/0.415   
+ 76%|███████▌  | 114/150 [3:40:51<1:07:26, 112.40s/it]val  loss: 0.6451   embedding norm: 1.538  Triplets (all/active): 252.0/185.4  Mean dist (pos/neg): 0.312/0.331   
+train  loss: 0.4164   embedding norm: 1.547  Triplets (all/active): 253.8/71.7  Mean dist (pos/neg): 0.295/0.414   
+ 77%|███████▋  | 115/150 [3:42:43<1:05:36, 112.46s/it]val  loss: 0.6605   embedding norm: 1.536  Triplets (all/active): 251.9/184.2  Mean dist (pos/neg): 0.311/0.329   
+train  loss: 0.4194   embedding norm: 1.544  Triplets (all/active): 253.9/72.8  Mean dist (pos/neg): 0.296/0.412   
+ 77%|███████▋  | 116/150 [3:44:35<1:03:39, 112.33s/it]val  loss: 0.6530   embedding norm: 1.530  Triplets (all/active): 251.8/184.3  Mean dist (pos/neg): 0.310/0.329   
+train  loss: 0.4097   embedding norm: 1.540  Triplets (all/active): 253.8/70.5  Mean dist (pos/neg): 0.295/0.415   
+ 78%|███████▊  | 117/150 [3:46:28<1:01:51, 112.48s/it]val  loss: 0.6428   embedding norm: 1.528  Triplets (all/active): 251.9/183.1  Mean dist (pos/neg): 0.310/0.330   
+train  loss: 0.4029   embedding norm: 1.539  Triplets (all/active): 253.9/69.9  Mean dist (pos/neg): 0.295/0.413   
+ 79%|███████▊  | 118/150 [3:48:21<1:00:01, 112.54s/it]val  loss: 0.6482   embedding norm: 1.525  Triplets (all/active): 251.9/186.8  Mean dist (pos/neg): 0.310/0.328   
+train  loss: 0.4033   embedding norm: 1.535  Triplets (all/active): 254.0/72.1  Mean dist (pos/neg): 0.294/0.411   
+ 79%|███████▉  | 119/150 [3:50:13<58:10, 112.59s/it]  val  loss: 0.6419   embedding norm: 1.523  Triplets (all/active): 251.9/185.2  Mean dist (pos/neg): 0.312/0.330   
+train  loss: 0.4159   embedding norm: 1.529  Triplets (all/active): 253.8/72.2  Mean dist (pos/neg): 0.297/0.413   
+ 80%|████████  | 120/150 [3:52:06<56:19, 112.66s/it]val  loss: 0.6412   embedding norm: 1.517  Triplets (all/active): 252.1/182.3  Mean dist (pos/neg): 0.309/0.329   
+train  loss: 0.4155   embedding norm: 1.529  Triplets (all/active): 254.0/70.6  Mean dist (pos/neg): 0.294/0.411   
+ 81%|████████  | 121/150 [3:53:59<54:25, 112.60s/it]val  loss: 0.6420   embedding norm: 1.521  Triplets (all/active): 251.5/184.5  Mean dist (pos/neg): 0.309/0.328   
+train  loss: 0.4192   embedding norm: 1.531  Triplets (all/active): 253.7/71.6  Mean dist (pos/neg): 0.294/0.411   
+ 81%|████████▏ | 122/150 [3:55:51<52:33, 112.64s/it]val  loss: 0.6376   embedding norm: 1.519  Triplets (all/active): 251.9/184.5  Mean dist (pos/neg): 0.308/0.328   
+train  loss: 0.4158   embedding norm: 1.525  Triplets (all/active): 253.9/72.5  Mean dist (pos/neg): 0.294/0.410   
+ 82%|████████▏ | 123/150 [3:57:44<50:38, 112.52s/it]val  loss: 0.6425   embedding norm: 1.520  Triplets (all/active): 251.9/186.7  Mean dist (pos/neg): 0.311/0.328   
+train  loss: 0.4050   embedding norm: 1.528  Triplets (all/active): 254.0/69.8  Mean dist (pos/neg): 0.293/0.412   
+ 83%|████████▎ | 124/150 [3:59:36<48:43, 112.45s/it]val  loss: 0.6487   embedding norm: 1.522  Triplets (all/active): 252.2/183.6  Mean dist (pos/neg): 0.308/0.327   
+train  loss: 0.4111   embedding norm: 1.535  Triplets (all/active): 253.9/72.2  Mean dist (pos/neg): 0.294/0.409   
+ 83%|████████▎ | 125/150 [4:01:28<46:49, 112.37s/it]val  loss: 0.6572   embedding norm: 1.529  Triplets (all/active): 251.9/184.4  Mean dist (pos/neg): 0.310/0.328   
+train  loss: 0.4102   embedding norm: 1.535  Triplets (all/active): 254.0/71.2  Mean dist (pos/neg): 0.294/0.411   
+ 84%|████████▍ | 126/150 [4:03:20<44:55, 112.29s/it]val  loss: 0.6430   embedding norm: 1.528  Triplets (all/active): 251.7/184.5  Mean dist (pos/neg): 0.308/0.328   
+train  loss: 0.4151   embedding norm: 1.531  Triplets (all/active): 253.7/70.0  Mean dist (pos/neg): 0.293/0.411   
+ 85%|████████▍ | 127/150 [4:05:13<43:05, 112.39s/it]val  loss: 0.6480   embedding norm: 1.516  Triplets (all/active): 251.7/185.3  Mean dist (pos/neg): 0.308/0.327   
+train  loss: 0.4073   embedding norm: 1.523  Triplets (all/active): 254.0/69.6  Mean dist (pos/neg): 0.294/0.412   
+ 85%|████████▌ | 128/150 [4:07:05<41:10, 112.29s/it]val  loss: 0.6412   embedding norm: 1.518  Triplets (all/active): 251.7/182.9  Mean dist (pos/neg): 0.307/0.327   
+train  loss: 0.4033   embedding norm: 1.520  Triplets (all/active): 254.0/70.4  Mean dist (pos/neg): 0.294/0.410   
+ 86%|████████▌ | 129/150 [4:08:58<39:22, 112.49s/it]val  loss: 0.6531   embedding norm: 1.510  Triplets (all/active): 251.6/183.1  Mean dist (pos/neg): 0.308/0.327   
+train  loss: 0.4224   embedding norm: 1.518  Triplets (all/active): 253.8/70.1  Mean dist (pos/neg): 0.294/0.410   
+ 87%|████████▋ | 130/150 [4:10:50<37:27, 112.38s/it]val  loss: 0.6540   embedding norm: 1.508  Triplets (all/active): 251.7/183.4  Mean dist (pos/neg): 0.309/0.328   
+train  loss: 0.4000   embedding norm: 1.513  Triplets (all/active): 253.7/65.9  Mean dist (pos/neg): 0.293/0.413   
+ 87%|████████▋ | 131/150 [4:12:42<35:35, 112.39s/it]val  loss: 0.6406   embedding norm: 1.505  Triplets (all/active): 251.8/183.7  Mean dist (pos/neg): 0.307/0.327   
+train  loss: 0.4290   embedding norm: 1.515  Triplets (all/active): 253.8/66.4  Mean dist (pos/neg): 0.293/0.412   
+ 88%|████████▊ | 132/150 [4:14:35<33:43, 112.41s/it]val  loss: 0.6470   embedding norm: 1.509  Triplets (all/active): 251.9/185.1  Mean dist (pos/neg): 0.308/0.325   
+train  loss: 0.4261   embedding norm: 1.518  Triplets (all/active): 254.0/68.6  Mean dist (pos/neg): 0.292/0.409   
+ 89%|████████▊ | 133/150 [4:16:27<31:52, 112.48s/it]val  loss: 0.6523   embedding norm: 1.516  Triplets (all/active): 251.7/187.1  Mean dist (pos/neg): 0.308/0.324   
+train  loss: 0.4152   embedding norm: 1.524  Triplets (all/active): 253.9/69.3  Mean dist (pos/neg): 0.291/0.408   
+ 89%|████████▉ | 134/150 [4:18:20<30:00, 112.50s/it]val  loss: 0.6513   embedding norm: 1.513  Triplets (all/active): 252.0/183.8  Mean dist (pos/neg): 0.306/0.324   
+train  loss: 0.4022   embedding norm: 1.531  Triplets (all/active): 253.9/66.8  Mean dist (pos/neg): 0.292/0.411   
+ 90%|█████████ | 135/150 [4:20:13<28:08, 112.59s/it]val  loss: 0.6432   embedding norm: 1.527  Triplets (all/active): 252.0/185.4  Mean dist (pos/neg): 0.308/0.326   
+train  loss: 0.4152   embedding norm: 1.540  Triplets (all/active): 253.7/71.7  Mean dist (pos/neg): 0.292/0.408   
+ 91%|█████████ | 136/150 [4:22:05<26:12, 112.32s/it]val  loss: 0.6323   embedding norm: 1.530  Triplets (all/active): 252.0/182.5  Mean dist (pos/neg): 0.305/0.325   
+train  loss: 0.4046   embedding norm: 1.537  Triplets (all/active): 253.9/64.8  Mean dist (pos/neg): 0.290/0.410   
+ 91%|█████████▏| 137/150 [4:23:57<24:20, 112.37s/it]val  loss: 0.6417   embedding norm: 1.524  Triplets (all/active): 252.3/185.6  Mean dist (pos/neg): 0.305/0.323   
+train  loss: 0.4192   embedding norm: 1.531  Triplets (all/active): 253.8/72.8  Mean dist (pos/neg): 0.292/0.405   
+ 92%|█████████▏| 138/150 [4:25:49<22:25, 112.15s/it]val  loss: 0.6359   embedding norm: 1.522  Triplets (all/active): 252.5/185.6  Mean dist (pos/neg): 0.307/0.325   
+train  loss: 0.4197   embedding norm: 1.533  Triplets (all/active): 253.8/65.5  Mean dist (pos/neg): 0.291/0.412   
+ 93%|█████████▎| 139/150 [4:27:41<20:35, 112.31s/it]val  loss: 0.6403   embedding norm: 1.523  Triplets (all/active): 251.9/185.6  Mean dist (pos/neg): 0.307/0.325   
+train  loss: 0.4021   embedding norm: 1.530  Triplets (all/active): 254.0/69.7  Mean dist (pos/neg): 0.292/0.408   
+ 93%|█████████▎| 140/150 [4:29:34<18:44, 112.40s/it]val  loss: 0.6481   embedding norm: 1.518  Triplets (all/active): 251.8/183.9  Mean dist (pos/neg): 0.306/0.324   
+train  loss: 0.4059   embedding norm: 1.528  Triplets (all/active): 253.8/64.7  Mean dist (pos/neg): 0.290/0.411   
+ 94%|█████████▍| 141/150 [4:31:26<16:51, 112.35s/it]val  loss: 0.6409   embedding norm: 1.519  Triplets (all/active): 251.9/183.7  Mean dist (pos/neg): 0.305/0.324   
+train  loss: 0.4182   embedding norm: 1.523  Triplets (all/active): 253.9/66.7  Mean dist (pos/neg): 0.292/0.410   
+ 95%|█████████▍| 142/150 [4:33:18<14:58, 112.32s/it]val  loss: 0.6562   embedding norm: 1.509  Triplets (all/active): 251.8/185.3  Mean dist (pos/neg): 0.307/0.324   
+train  loss: 0.4192   embedding norm: 1.520  Triplets (all/active): 253.7/64.9  Mean dist (pos/neg): 0.291/0.410   
+ 95%|█████████▌| 143/150 [4:35:15<13:14, 113.51s/it]val  loss: 0.6463   embedding norm: 1.512  Triplets (all/active): 252.1/184.7  Mean dist (pos/neg): 0.306/0.324   
+train  loss: 0.4066   embedding norm: 1.527  Triplets (all/active): 253.7/64.9  Mean dist (pos/neg): 0.291/0.410   
+ 96%|█████████▌| 144/150 [4:37:07<11:18, 113.11s/it]val  loss: 0.6477   embedding norm: 1.518  Triplets (all/active): 251.8/184.9  Mean dist (pos/neg): 0.306/0.324   
+train  loss: 0.4057   embedding norm: 1.523  Triplets (all/active): 253.7/65.0  Mean dist (pos/neg): 0.290/0.410   
+ 97%|█████████▋| 145/150 [4:38:59<09:24, 112.95s/it]val  loss: 0.6543   embedding norm: 1.506  Triplets (all/active): 252.1/185.1  Mean dist (pos/neg): 0.305/0.323   
+train  loss: 0.4105   embedding norm: 1.513  Triplets (all/active): 253.7/67.0  Mean dist (pos/neg): 0.290/0.409   
+ 97%|█████████▋| 146/150 [4:40:52<07:30, 112.70s/it]val  loss: 0.6517   embedding norm: 1.508  Triplets (all/active): 251.9/183.4  Mean dist (pos/neg): 0.308/0.325   
+train  loss: 0.4011   embedding norm: 1.522  Triplets (all/active): 253.8/69.8  Mean dist (pos/neg): 0.292/0.408   
+ 98%|█████████▊| 147/150 [4:42:44<05:37, 112.49s/it]val  loss: 0.6619   embedding norm: 1.521  Triplets (all/active): 252.0/184.6  Mean dist (pos/neg): 0.306/0.324   
+train  loss: 0.4080   embedding norm: 1.526  Triplets (all/active): 253.9/66.4  Mean dist (pos/neg): 0.291/0.409   
+ 99%|█████████▊| 148/150 [4:44:36<03:44, 112.49s/it]val  loss: 0.6429   embedding norm: 1.516  Triplets (all/active): 251.9/183.0  Mean dist (pos/neg): 0.306/0.324   
+train  loss: 0.4102   embedding norm: 1.526  Triplets (all/active): 253.7/61.8  Mean dist (pos/neg): 0.290/0.411   
+ 99%|█████████▉| 149/150 [4:46:28<01:52, 112.29s/it]val  loss: 0.6501   embedding norm: 1.518  Triplets (all/active): 252.2/183.4  Mean dist (pos/neg): 0.305/0.324   
+train  loss: 0.4196   embedding norm: 1.522  Triplets (all/active): 253.7/69.6  Mean dist (pos/neg): 0.291/0.406   
+100%|██████████| 150/150 [4:48:20<00:00, 112.13s/it]100%|██████████| 150/150 [4:48:20<00:00, 115.33s/it]val  loss: 0.6429   embedding norm: 1.512  Triplets (all/active): 252.0/182.6  Mean dist (pos/neg): 0.304/0.323   
+
+Saving weights: ./outputs/model_MinkLocEvd_20250628_1358_final.pth
+--- STANDARD EVALUATION RESULTS ---
+Dataset: oxford
+Avg. top 1% recall: 96.26   Avg. recall @N:
+[88.50545522 93.43282606 95.26596249 96.2998783  96.93624825 97.4206259
+ 97.75226243 97.99163356 98.20032008 98.35720056 98.50932796 98.63773081
+ 98.74344158 98.85372659 98.91653601 98.98190282 99.0398721  99.09908063
+ 99.15018328 99.18450591 99.2296861  99.27807264 99.30634342 99.34830379
+ 99.36845902]
+Dataset: university
+Avg. top 1% recall: 92.79   Avg. recall @N:
+[81.05394605 88.72710623 91.43273393 92.78804529 93.75374625 94.78438228
+ 95.23393273 95.81252081 96.26373626 96.71411921 97.22777223 97.42091242
+ 97.87046287 97.9995005  98.19180819 98.19180819 98.32001332 98.38411588
+ 98.51232101 98.64219114 98.64219114 98.83616384 98.96520147 99.02930403
+ 99.09423909]
+Dataset: residential
+Avg. top 1% recall: 86.55   Avg. recall @N:
+[71.77477477 81.24504505 86.55495495 88.77477477 90.72702703 91.87207207
+ 92.67837838 93.82162162 94.35765766 94.82702703 95.0954955  95.4972973
+ 95.83243243 96.23603604 96.50630631 96.64144144 96.97657658 97.37927928
+ 97.44594595 97.71531532 97.85045045 98.05135135 98.11891892 98.18558559
+ 98.31981982]
+Dataset: business
+Avg. top 1% recall: 80.16   Avg. recall @N:
+[72.21739575 80.16100363 84.3436399  87.14128657 89.15912758 90.31886974
+ 91.3776005  92.38760924 93.3196941  94.07601753 94.70671412 95.28525718
+ 95.56317468 95.86507183 96.29386869 96.49538386 96.92468964 97.05070358
+ 97.22697006 97.37810963 97.50386849 97.73013241 97.85627069 97.93164758
+ 98.03240644]
+--- UNCERTAINTY EVALUATION RESULTS ---
+Dataset: oxford_100%
+Avg. top 1% recall: 96.26   Avg. recall @N:
+[88.50545522 93.43282606 95.26596249 96.2998783  96.93624825 97.4206259
+ 97.75226243 97.99163356 98.20032008 98.35720056 98.50932796 98.63773081
+ 98.74344158 98.85372659 98.91653601 98.98190282 99.0398721  99.09908063
+ 99.15018328 99.18450591 99.2296861  99.27807264 99.30634342 99.34830379
+ 99.36845902]
+Dataset: oxford_90%
+Avg. top 1% recall: 96.27   Avg. recall @N:
+[88.47422556 93.44869138 95.27714989 96.30448479 96.95999962 97.4524866
+ 97.7903013  98.02931318 98.24433895 98.40167526 98.55231792 98.68032513
+ 98.79079214 98.90047289 98.96658312 99.03013592 99.08719089 99.14733951
+ 99.18235727 99.21154329 99.25617119 99.30250801 99.3338501  99.38039788
+ 99.40270683]
+Dataset: oxford_80%
+Avg. top 1% recall: 96.44   Avg. recall @N:
+[88.63720749 93.62669182 95.4516932  96.46704073 97.11865992 97.60770087
+ 97.93979452 98.17094439 98.36536554 98.51589594 98.65902705 98.78148583
+ 98.87978653 98.98331391 99.04155002 99.10183159 99.15833588 99.21609571
+ 99.24143362 99.27210532 99.31434629 99.3508586  99.37986295 99.4263529
+ 99.445324  ]
+Dataset: oxford_70%
+Avg. top 1% recall: 96.41   Avg. recall @N:
+[88.48992598 93.53369503 95.38756024 96.44760372 97.12085324 97.60071383
+ 97.93299676 98.16575816 98.37944605 98.52535182 98.65774331 98.77737448
+ 98.87849071 98.97903054 99.03234205 99.08596558 99.1399626  99.19341902
+ 99.22005338 99.25518913 99.29669408 99.32980337 99.36061446 99.40712177
+ 99.42475884]
+Dataset: oxford_60%
+Avg. top 1% recall: 96.39   Avg. recall @N:
+[88.59915351 93.59917682 95.37668826 96.41639866 97.06888043 97.54284917
+ 97.868822   98.11083346 98.32269355 98.45912191 98.59210744 98.71303814
+ 98.8101791  98.90946602 98.95899907 99.01645908 99.06587728 99.11780636
+ 99.14883447 99.18493158 99.2230111  99.24627824 99.27942233 99.33128492
+ 99.34907656]
+Dataset: oxford_50%
+Avg. top 1% recall: 96.53   Avg. recall @N:
+[89.00136512 93.83589754 95.57788759 96.54555734 97.17672049 97.62434252
+ 97.93947322 98.15699701 98.36114578 98.48020075 98.60239648 98.71500967
+ 98.81910656 98.91365087 98.96711995 99.02029357 99.06286729 99.11554728
+ 99.13332637 99.16508319 99.19582482 99.22036322 99.25073396 99.29683912
+ 99.31808889]
+Dataset: oxford_40%
+Avg. top 1% recall: 96.47   Avg. recall @N:
+[89.23235711 93.92017405 95.60607979 96.48985494 97.1235185  97.56799036
+ 97.8858635  98.10625843 98.28964488 98.40783477 98.53336486 98.6333056
+ 98.73636327 98.82738616 98.87863014 98.9327465  98.97301517 99.02273512
+ 99.0374863  99.06888118 99.1028942  99.1298595  99.15941893 99.21672489
+ 99.24315677]
+Dataset: oxford_30%
+Avg. top 1% recall: 96.61   Avg. recall @N:
+[89.50331241 94.19835069 95.79762167 96.62656671 97.28184907 97.67171552
+ 97.9995532  98.2405116  98.40460896 98.4972528  98.57171812 98.65311602
+ 98.75982875 98.84481172 98.88851    98.93057144 98.95964008 98.99574673
+ 99.00986838 99.0308687  99.05546034 99.07559278 99.1047019  99.16013594
+ 99.18490333]
+Dataset: oxford_20%
+Avg. top 1% recall: 96.80   Avg. recall @N:
+[89.97838006 94.52550033 96.01461582 96.81077881 97.37061397 97.69605754
+ 98.00744627 98.23015317 98.38161154 98.45879877 98.52255585 98.6133337
+ 98.73237547 98.80051023 98.85881163 98.89109094 98.90591308 98.92965383
+ 98.95011438 98.97448855 98.98130333 98.98953785 99.01840833 99.05732368
+ 99.09423704]
+Dataset: oxford_10%
+Avg. top 1% recall: 95.93   Avg. recall @N:
+[89.7377307  93.83449308 95.10080252 95.93308125 96.51636078 96.80796229
+ 97.1047036  97.31517248 97.49752635 97.60336255 97.68740893 97.79154393
+ 97.93843508 98.02939485 98.1027997  98.13573778 98.16538205 98.16538205
+ 98.20584883 98.22231787 98.2354931  98.25196214 98.26513737 98.31039514
+ 98.38285891]
+Dataset: university_100%
+Avg. top 1% recall: 92.79   Avg. recall @N:
+[81.05394605 88.72710623 91.43273393 92.78804529 93.75374625 94.78438228
+ 95.23393273 95.81252081 96.26373626 96.71411921 97.22777223 97.42091242
+ 97.87046287 97.9995005  98.19180819 98.19180819 98.32001332 98.38411588
+ 98.51232101 98.64219114 98.64219114 98.83616384 98.96520147 99.02930403
+ 99.09423909]
+Dataset: university_90%
+Avg. top 1% recall: 92.50   Avg. recall @N:
+[81.58651911 88.60060362 91.2917505  92.49899396 93.27565392 94.4084507
+ 94.90241449 95.53822938 96.03420523 96.45875252 97.02313883 97.23541247
+ 97.72937626 97.87122736 98.08249497 98.08249497 98.22334004 98.29376258
+ 98.43460765 98.57746479 98.57746479 98.79074447 98.86217304 98.93259557
+ 99.00402414]
+Dataset: university_80%
+Avg. top 1% recall: 92.18   Avg. recall @N:
+[81.23143881 88.18484383 91.21991807 92.1812596  93.05683564 94.3343574
+ 94.89119304 95.60803891 96.08678955 96.48617512 97.04173067 97.20174091
+ 97.75857655 97.83794163 98.07603687 98.07603687 98.15540195 98.23476703
+ 98.39349718 98.55478751 98.55478751 98.79544291 98.87608807 98.87608807
+ 98.95673323]
+Dataset: university_70%
+Avg. top 1% recall: 92.22   Avg. recall @N:
+[81.31313131 88.18686869 91.11952862 92.22222222 93.13468013 94.32491582
+ 94.78114478 95.6026936  96.06060606 96.51851852 97.06397306 97.24747475
+ 97.79461279 97.88552189 97.97643098 97.97643098 98.06734007 98.15824916
+ 98.24915825 98.34175084 98.34175084 98.61784512 98.71043771 98.71043771
+ 98.8030303 ]
+Dataset: university_60%
+Avg. top 1% recall: 92.02   Avg. recall @N:
+[81.80851064 87.76595745 90.74468085 92.0212766  92.87234043 94.04255319
+ 94.57446809 95.42553191 95.95744681 96.4893617  97.12765957 97.34042553
+ 97.9787234  97.9787234  98.08510638 98.08510638 98.19148936 98.29787234
+ 98.40425532 98.5106383  98.5106383  98.82978723 98.82978723 98.82978723
+ 98.82978723]
+Dataset: university_50%
+Avg. top 1% recall: 91.28   Avg. recall @N:
+[80.51282051 86.66666667 89.87179487 91.28205128 92.30769231 93.58974359
+ 94.23076923 95.25641026 95.8974359  96.53846154 97.30769231 97.56410256
+ 98.33333333 98.33333333 98.46153846 98.46153846 98.58974359 98.71794872
+ 98.84615385 98.97435897 98.97435897 99.23076923 99.23076923 99.23076923
+ 99.23076923]
+Dataset: university_40%
+Avg. top 1% recall: 90.38   Avg. recall @N:
+[80.2016129  86.08366935 88.79032258 90.38306452 91.47681452 92.89818548
+ 93.52822581 94.62701613 95.41834677 96.05342742 96.99092742 97.30846774
+ 97.93850806 97.93850806 98.09475806 98.09475806 98.25100806 98.40725806
+ 98.56350806 98.72479839 98.72479839 99.04233871 99.04233871 99.04233871
+ 99.04233871]
+Dataset: university_30%
+Avg. top 1% recall: 90.63   Avg. recall @N:
+
+[79.375      85.83333333 88.54166667 90.625      91.875      93.33333333
+ 94.16666667 95.         95.41666667 96.04166667 97.08333333 97.29166667
+ 97.91666667 97.91666667 98.125      98.125      98.33333333 98.54166667
+ 98.54166667 98.75       98.75       98.95833333 98.95833333 98.95833333
+ 98.95833333]
+Dataset: university_20%
+Avg. top 1% recall: 88.75   Avg. recall @N:
+[78.125  84.375  87.1875 88.75   90.625  92.5    93.75   95.     95.3125
+ 96.25   97.1875 97.1875 97.8125 97.8125 98.125  98.125  98.4375 98.75
+ 98.75   98.75   98.75   99.0625 99.0625 99.0625 99.0625]
+Dataset: university_10%
+Avg. top 1% recall: 91.25   Avg. recall @N:
+[ 80.625  87.5    89.375  91.25   93.75   96.25   97.5    98.125  98.125
+  98.75   98.75   98.75   99.375  99.375  99.375  99.375 100.    100.
+ 100.    100.    100.    100.    100.    100.    100.   ]
+Dataset: residential_100%
+Avg. top 1% recall: 86.55   Avg. recall @N:
+[71.77477477 81.24504505 86.55495495 88.77477477 90.72702703 91.87207207
+ 92.67837838 93.82162162 94.35765766 94.82702703 95.0954955  95.4972973
+ 95.83243243 96.23603604 96.50630631 96.64144144 96.97657658 97.37927928
+ 97.44594595 97.71531532 97.85045045 98.05135135 98.11891892 98.18558559
+ 98.31981982]
+Dataset: residential_90%
+Avg. top 1% recall: 86.79   Avg. recall @N:
+[71.29170325 81.07769974 86.79104478 89.01997366 91.0261194  92.21685689
+ 93.03226514 94.07265145 94.6641791  95.10864794 95.25680421 95.62664618
+ 95.99648815 96.44205443 96.66593503 96.81518876 97.18503073 97.62949956
+ 97.70302897 97.92581212 98.00043898 98.22212467 98.29675154 98.37028095
+ 98.51843723]
+Dataset: residential_80%
+Avg. top 1% recall: 86.25   Avg. recall @N:
+[70.75       80.75       86.25       88.66666667 90.75       92.
+ 92.83333333 93.66666667 94.33333333 94.83333333 95.         95.33333333
+ 95.75       96.16666667 96.41666667 96.58333333 96.91666667 97.41666667
+ 97.5        97.75       97.83333333 98.08333333 98.16666667 98.25
+ 98.41666667]
+Dataset: residential_70%
+Avg. top 1% recall: 86.06   Avg. recall @N:
+[69.74600871 80.04354136 86.06313498 88.45065312 90.64949202 91.79970972
+ 92.65965167 93.52140784 94.28156749 94.75689405 94.94738752 95.32837446
+ 95.80370102 96.28265602 96.47496372 96.66727141 96.9521045  97.42924528
+ 97.52358491 97.81023222 97.90638607 98.19121916 98.287373   98.38171263
+ 98.5722061 ]
+Dataset: residential_60%
+Avg. top 1% recall: 85.33   Avg. recall @N:
+[69.44444444 79.55555556 85.33333333 87.66666667 90.         91.11111111
+ 92.11111111 93.         93.66666667 94.22222222 94.33333333 94.77777778
+ 95.33333333 95.77777778 96.         96.22222222 96.55555556 97.11111111
+ 97.11111111 97.44444444 97.55555556 97.88888889 98.         98.11111111
+ 98.33333333]
+Dataset: residential_50%
+Avg. top 1% recall: 85.26   Avg. recall @N:
+[69.3598862  79.64793741 85.26315789 87.54267425 90.08890469 91.43314367
+ 92.23684211 93.17923186 93.84423898 94.50924609 94.50924609 95.04267425
+ 95.57610242 95.98150782 96.25177809 96.38691323 96.65362731 97.32219061
+ 97.32219061 97.72403983 97.85917496 98.12588905 98.26102418 98.39260313
+ 98.65931721]
+Dataset: residential_40%
+Avg. top 1% recall: 84.17   Avg. recall @N:
+[69.16666667 79.16666667 84.16666667 86.         88.66666667 90.16666667
+ 91.16666667 92.16666667 93.         93.66666667 93.66666667 94.33333333
+ 95.         95.16666667 95.5        95.66666667 96.         96.83333333
+ 96.83333333 97.33333333 97.5        97.83333333 98.         98.
+ 98.33333333]
+Dataset: residential_30%
+Avg. top 1% recall: 84.78   Avg. recall @N:
+[69.56521739 79.7826087  84.7826087  86.73913043 88.91304348 90.43478261
+ 91.52173913 92.60869565 93.26086957 94.13043478 94.13043478 95.
+ 95.86956522 95.86956522 96.30434783 96.52173913 96.52173913 96.73913043
+ 96.73913043 97.17391304 97.17391304 97.60869565 97.82608696 97.82608696
+ 98.26086957]
+Dataset: residential_20%
+Avg. top 1% recall: 84.33   Avg. recall @N:
+[71.66666667 80.         84.33333333 86.         88.33333333 89.66666667
+ 91.         92.         92.66666667 93.66666667 93.66666667 94.66666667
+ 95.66666667 95.66666667 96.33333333 96.33333333 96.33333333 96.66666667
+ 96.66666667 97.         97.         97.66666667 98.         98.
+ 98.        ]
+Dataset: residential_10%
+Avg. top 1% recall: 81.25   Avg. recall @N:
+[70.625 76.875 81.25  83.125 86.25  87.5   89.375 90.625 91.25  93.125
+ 93.125 93.125 93.75  93.75  94.375 94.375 94.375 95.    95.    95.625
+ 95.625 96.25  96.25  96.25  96.25 ]
+Dataset: business_100%
+Avg. top 1% recall: 80.16   Avg. recall @N:
+[72.21739575 80.16100363 84.3436399  87.14128657 89.15912758 90.31886974
+ 91.3776005  92.38760924 93.3196941  94.07601753 94.70671412 95.28525718
+ 95.56317468 95.86507183 96.29386869 96.49538386 96.92468964 97.05070358
+ 97.22697006 97.37810963 97.50386849 97.73013241 97.85627069 97.93164758
+ 98.03240644]
+Dataset: business_90%
+Avg. top 1% recall: 79.84   Avg. recall @N:
+[71.97102609 79.84457452 84.16960294 87.04473458 89.11042238 90.19889593
+ 91.20403441 92.29469448 93.24334631 94.0247055  94.66733448 95.28078205
+ 95.5607446  95.89532289 96.34210205 96.50954638 96.95695325 97.09662154
+ 97.26391068 97.43135675 97.57071294 97.76593504 97.87766863 97.93322418
+ 98.01702481]
+Dataset: business_80%
+Avg. top 1% recall: 79.89   Avg. recall @N:
+[71.99631299 79.88746915 84.15937724 86.95681325 89.12551001 90.16169344
+ 91.16761205 92.30090906 93.33709498 94.15373726 94.81393549 95.44189605
+ 95.69426947 95.97690023 96.32222753 96.47946272 96.9832169  97.14045458
+ 97.29709766 97.48558534 97.61098091 97.83071611 97.92505822 97.95630822
+ 98.05065033]
+Dataset: business_70%
+Avg. top 1% recall: 80.80   Avg. recall @N:
+[72.7097167  80.80279875 84.6464282  87.34230007 89.57183446 90.50582391
+ 91.51227341 92.48482953 93.49051194 94.24541609 94.89266351 95.50367904
+ 95.79249892 95.97210182 96.2953364  96.43922502 96.90790846 97.08777202
+ 97.26685732 97.44672088 97.55386374 97.76943787 97.84164097 97.87735526
+ 97.98527265]
+Dataset: business_60%
+Avg. top 1% recall: 80.99   Avg. recall @N:
+[72.99334734 80.99089636 84.88340336 87.3539916  89.5297619  90.40931373
+ 91.33123249 92.25280112 93.38235294 94.01085434 94.72303922 95.39285714
+ 95.72829132 95.89565826 96.18872549 96.31442577 96.81757703 96.98529412
+ 97.15266106 97.36204482 97.48704482 97.6547619  97.73879552 97.78046218
+ 97.86414566]
+Dataset: business_50%
+Avg. top 1% recall: 82.19   Avg. recall @N:
+[74.7030303  82.19494949 86.06616162 88.42979798 90.59040404 91.39545455
+ 92.30252525 93.00707071 93.86010101 94.46464646 94.96767677 95.67171717
+ 95.97424242 96.12525253 96.42727273 96.57828283 97.13232323 97.28333333
+ 97.43383838 97.58484848 97.68484848 97.78585859 97.88686869 97.93686869
+ 97.93686869]
+Dataset: business_40%
+Avg. top 1% recall: 83.68   Avg. recall @N:
+[76.59098101 83.68275316 87.19541139 89.4556962  91.52531646 92.08860759
+ 92.77848101 93.46914557 94.22231013 94.59889241 95.03718354 95.72705696
+ 95.98022152 96.10522152 96.4193038  96.6068038  97.11155063 97.29984177
+ 97.48734177 97.67563291 97.80063291 97.86313291 97.98892405 98.05142405
+ 98.05142405]
+Dataset: business_30%
+Avg. top 1% recall: 84.42   Avg. recall @N:
+[77.         84.41666667 87.58333333 89.83333333 91.66666667 92.16666667
+ 92.75       93.41666667 94.         94.41666667 94.91666667 95.58333333
+ 95.91666667 96.08333333 96.41666667 96.5        97.16666667 97.25
+ 97.33333333 97.58333333 97.75       97.83333333 97.91666667 98.
+ 98.        ]
+Dataset: business_20%
+Avg. top 1% recall: 86.00   Avg. recall @N:
+[78.75  86.    89.25  90.625 92.375 92.875 93.5   94.375 94.625 95.
+ 95.5   96.    96.375 96.625 97.    97.125 97.75  97.875 97.875 98.125
+ 98.125 98.125 98.25  98.25  98.25 ]
+Dataset: business_10%
+Avg. top 1% recall: 85.25   Avg. recall @N:
+[ 78.25  85.25  89.25  90.5   92.25  92.75  93.75  94.75  95.    95.75
+  96.75  97.75  98.    98.    98.5   98.75  99.5   99.75  99.75 100.
+ 100.   100.   100.   100.   100.  ]
+.
+wandb: Waiting for W&B process to finish... (success).
+wandb: 
+wandb: Run history:
+wandb:    standard_eval/business/avg_1%_recall ▁
+wandb:         standard_eval/business/recall@1 ▁
+wandb:      standard_eval/oxford/avg_1%_recall ▁
+wandb:           standard_eval/oxford/recall@1 ▁
+wandb: standard_eval/residential/avg_1%_recall ▁
+wandb:      standard_eval/residential/recall@1 ▁
+wandb:  standard_eval/university/avg_1%_recall ▁
+wandb:       standard_eval/university/recall@1 ▁
+wandb: 
+wandb: Run summary:
+wandb:    standard_eval/business/avg_1%_recall 80.161
+wandb:         standard_eval/business/recall@1 72.2174
+wandb:      standard_eval/oxford/avg_1%_recall 96.25934
+wandb:           standard_eval/oxford/recall@1 88.50546
+wandb: standard_eval/residential/avg_1%_recall 86.55495
+wandb:      standard_eval/residential/recall@1 71.77477
+wandb:  standard_eval/university/avg_1%_recall 92.78805
+wandb:       standard_eval/university/recall@1 81.05395
+wandb: 
+wandb: Synced playful-frog-8: https://wandb.ai/r-marconzini-universit-degli-studi-di-milano-bicocca/MinkLoc3D-EvD/runs/5dvvzb15
+wandb: Synced 5 W&B file(s), 108 media file(s), 108 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/wandb/run-20250628_135809-5dvvzb15/logs

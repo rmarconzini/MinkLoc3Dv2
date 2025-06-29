@@ -4,7 +4,7 @@ experiment_name: evaluation_minkloc3dv2-DER-uncertainty
 description: "MinkLoc3Dv2-DER evaluation"
 
 code: .
-command: python eval/pnv_evaluate_der.py --config azure/run/teal_leaf_4p2fyrfnpx/config.txt --model_config azure/run/teal_leaf_4p2fyrfnpx/model.txt --weights azure/run/teal_leaf_4p2fyrfnpx/outputs/model_MinkLocEvd_20250623_0818_final.pth --data_path ${{inputs.input_data}}
+command: python eval/pnv_evaluate.py --config azure/run/great_kite_s6zt39rtk5/config.txt --model_config azure/run/great_kite_s6zt39rtk5/model.txt --weights azure/run/great_kite_s6zt39rtk5/outputs/model_MinkLocEvd_20250625_0856_final.pth --data_path ${{inputs.input_data}}
 
 inputs:
   input_data:

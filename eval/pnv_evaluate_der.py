@@ -1,5 +1,7 @@
 # pnv_evaluate_uncertainty.py
 
+from collections import defaultdict
+import re
 import sys
 import os
 
@@ -58,16 +60,15 @@ def evaluate_der(model, device, params: TrainingParams, log: bool = False, show_
         with open(os.path.join(params.dataset_folder, query_file), 'rb') as f:
             query_sets = pickle.load(f)
 
-        dataset_stats = evaluate_dataset(model, device, params, database_sets, query_sets, log=log, show_progress=show_progress)
-        
+        dataset_stats = evaluate_dataset(model, device, params, database_sets, query_sets, location_name,
+                                         log=log, show_progress=show_progress)
         all_stats.update(dataset_stats)
 
     return all_stats
 
 
-def evaluate_dataset(model, device, params: TrainingParams, database_sets, query_sets, log: bool = False,
-                     show_progress: bool = False):
-
+def evaluate_dataset(model, device, params: TrainingParams, database_sets, query_sets, location_name: str,
+                     log: bool = False, show_progress: bool = False):
     db_embeddings, _ = get_embeddings_and_uncertainties(model, database_sets, device, params, 'Computing database embeddings', show_progress=show_progress)
     query_embeddings, query_uncertainties = get_embeddings_and_uncertainties(model, query_sets, device, params, 'Computing query embeddings', show_progress=show_progress)
 
@@ -76,26 +77,24 @@ def evaluate_dataset(model, device, params: TrainingParams, database_sets, query
 
     for k in range(num_removal_steps):
         percentage_to_remove = k * PERCENTAGE_TO_REMOVE_STEP
-
         recall_sum = np.zeros(NUM_NEIGHBORS)
         one_percent_recall_sum = []
         pair_count = 0
 
-        for i in range(len(query_sets)):      # i = indice del run di query
-            for j in range(len(database_sets)):  # j = indice del run di database
+        for i in range(len(query_sets)):
+            for j in range(len(database_sets)):
                 if i == j:
                     continue
 
                 indices_to_keep = get_indices_to_keep(query_uncertainties[i], percentage_to_remove)
-                
                 filtered_query_embeddings = query_embeddings[i][indices_to_keep]
-                
- 
+
+                # Filtra il ground truth in base agli indici mantenuti
                 original_query_set = query_sets[i]
                 filtered_ground_truth = {new_idx: original_query_set[old_idx][j] for new_idx, old_idx in enumerate(indices_to_keep)}
 
                 pair_recall, pair_opr = get_recall(db_embeddings[j], filtered_query_embeddings, filtered_ground_truth)
-                
+
                 recall_sum += pair_recall
                 one_percent_recall_sum.append(pair_opr)
                 pair_count += 1
@@ -103,7 +102,8 @@ def evaluate_dataset(model, device, params: TrainingParams, database_sets, query
         avg_recall = recall_sum / pair_count
         avg_one_percent_recall = np.mean(one_percent_recall_sum)
         
-        stats_key = f"{database_sets[0][0]['query'].split('/')[0]}_{100 - int(percentage_to_remove*100)}%"
+        # **CORREZIONE**: Usa location_name per creare la chiave
+        stats_key = f"{location_name}_{100 - int(percentage_to_remove * 100)}%"
         dataset_stats[stats_key] = {'ave_one_percent_recall': avg_one_percent_recall, 'ave_recall': avg_recall}
 
     return dataset_stats
@@ -209,31 +209,34 @@ def pnv_write_eval_stats(file_name, prefix, stats):
         s += ", {:0.2f}, {:0.2f}\n".format(mean_1p_recall, mean_recall)
         f.write(s)
 
-def log_der_to_wandb(stats, prefix="uncertainty_eval/"):
+
+def log_uncertainty_eval_to_wandb(stats, prefix="uncertainty_eval/"):
+
+    from collections import defaultdict
     import re
     import wandb
 
-    for dataset_key, dataset_stats in stats.items():
-        # Expected format: "oxford_100%", "oxford_90%", etc.
-        match = re.match(r"(.+?)_(\d+)%", dataset_key)
-        if not match:
-            continue
-        dataset_name, keep_pct = match.groups()
+    grouped_stats = defaultdict(dict)
+    for key, data in stats.items():
+        match = re.match(r"(.+?)_(\d+)%", key)
+        if match:
+            dataset, keep_pct = match.groups()
+            grouped_stats[dataset][int(keep_pct)] = data
 
-        recall_curve = dataset_stats["ave_recall"]
-        one_percent_recall = dataset_stats["ave_one_percent_recall"]
-        recall_at_1 = recall_curve[0] if len(recall_curve) > 0 else None
+    for dataset_name, pct_data in grouped_stats.items():
+        sorted_pcts = sorted(pct_data.keys(), reverse=True)
 
-        log_dict = {
-            f"{prefix}{dataset_name}/1p_recall@{keep_pct}%": one_percent_recall,
-            f"{prefix}{dataset_name}/recall@1@{keep_pct}%": recall_at_1,
-        }
+        columns = ["% Kept", "Avg top 1% Recall"] + [f"Recall@{i}" for i in range(1, NUM_NEIGHBORS + 1)]
+        summary_table = wandb.Table(columns=columns)
 
-        # (Opzionale) aggiunta della curva completa Recall@N come array
-        for i, val in enumerate(recall_curve):
-            log_dict[f"{prefix}{dataset_name}/recall@{i+1}@{keep_pct}%"] = val
+        for pct in sorted_pcts:
+            data = pct_data[pct]
+            row = [pct, data['ave_one_percent_recall']] + list(data['ave_recall'])
+            summary_table.add_data(*row)
 
-        wandb.log(log_dict)
+        wandb.log({
+            f"{prefix}{dataset_name}/Summary_Table": summary_table
+        })
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Evaluate uncertainty-aware model on PointNetVLAD datasets')
@@ -258,12 +261,12 @@ if __name__ == "__main__":
 
     stats = evaluate_der(model, device, params, show_progress=False)
     print_eval_stats(stats)
-    log_der_to_wandb(stats)
+    log_uncertainty_eval_to_wandb(stats)
 
-    model_params_name = os.path.split(params.model_params.model_params_path)[1]
-    config_name = os.path.split(params.params_path)[1]
-    model_name = os.path.split(args.weights)[1]
-    model_name = os.path.splitext(model_name)[0]    
-    prefix = "{}, {}, {}".format(model_params_name, config_name, model_name)
+    # model_params_name = os.path.split(params.model_params.model_params_path)[1]
+    # config_name = os.path.split(params.params_path)[1]
+    # model_name = os.path.split(args.weights)[1]
+    # model_name = os.path.splitext(model_name)[0]    
+    # prefix = "{}, {}, {}".format(model_params_name, config_name, model_name)
 
     # pnv_write_eval_stats("./outputs/pnv_experiment_results_DER_based_triplet_loss.txt", prefix, stats)

@@ -339,10 +339,9 @@ def do_train(params: TrainingParams):
     print_eval_stats(stats)
     log_recall_to_wandb(stats, prefix="standard_eval/")
     stat_uncertainty = evaluate_der(model, device, params)
-    log_der_to_wandb(stat_uncertainty)
     print("--- UNCERTAINTY EVALUATION RESULTS ---")
     print_eval_stats(stat_uncertainty)
-    log_der_to_wandb(stat_uncertainty, prefix="uncertainty_eval/")
+    log_uncertainty_curves_to_wandb(stat_uncertainty, prefix="uncertainty_eval/")
 
     print('.')
 
@@ -378,28 +377,48 @@ def log_recall_to_wandb(stats, prefix="standard_eval/"):
         })
 
 
-def log_der_to_wandb(stats, prefix="uncertainty_eval/"):
+def log_uncertainty_curves_to_wandb(stats, prefix="uncertainty_eval/"):
     import re
-    import wandb
+    from collections import defaultdict
 
-    for dataset_key, dataset_stats in stats.items():
-        # Expected format: "oxford_100%", "oxford_90%", etc.
-        match = re.match(r"(.+?)_(\d+)%", dataset_key)
+    one_percent_recall_by_dataset = defaultdict(dict)  # {dataset: {keep_pct: 1% recall}}
+    recall_by_dataset_and_n = defaultdict(lambda: defaultdict(dict))  # {dataset: {N: {keep_pct: val}}}
+
+    for key, data in stats.items():
+        match = re.match(r"(.+?)_(\d+)%", key)
         if not match:
             continue
-        dataset_name, keep_pct = match.groups()
+        dataset, keep_pct = match.groups()
+        keep_pct = int(keep_pct)
 
-        recall_curve = dataset_stats["ave_recall"]
-        one_percent_recall = dataset_stats["ave_one_percent_recall"]
-        recall_at_1 = recall_curve[0] if len(recall_curve) > 0 else None
+        one_percent_recall_by_dataset[dataset][keep_pct] = data['ave_one_percent_recall']
+        recalls = data['ave_recall']
+        for i, val in enumerate(recalls):
+            recall_by_dataset_and_n[dataset][i + 1][keep_pct] = val  # recall@1, @2, ...
 
-        log_dict = {
-            f"{prefix}{dataset_name}/1p_recall@{keep_pct}%": one_percent_recall,
-            f"{prefix}{dataset_name}/recall@1@{keep_pct}%": recall_at_1,
-        }
+    for dataset, recall_dict in one_percent_recall_by_dataset.items():
+        xs = sorted(recall_dict.keys())
+        ys = [recall_dict[k] for k in xs]
+        wandb.log({
+            f"{prefix}{dataset}/avg_1%_recall_vs_pct": wandb.plot.line_series(
+                xs=xs,
+                ys=[ys],
+                keys=["avg_1%_recall"],
+                title=f"{dataset} Avg. Top 1% Recall vs % Kept",
+                xname="% kept"
+            )
+        })
 
-        # (Opzionale) aggiunta della curva completa Recall@N come array
-        for i, val in enumerate(recall_curve):
-            log_dict[f"{prefix}{dataset_name}/recall@{i+1}@{keep_pct}%"] = val
-
-        wandb.log(log_dict)
+    for dataset, recall_n_dict in recall_by_dataset_and_n.items():
+        for n, pct_dict in recall_n_dict.items():
+            xs = sorted(pct_dict.keys())
+            ys = [pct_dict[k] for k in xs]
+            wandb.log({
+                f"{prefix}{dataset}/recall@{n}_vs_pct": wandb.plot.line_series(
+                    xs=xs,
+                    ys=[ys],
+                    keys=[f"recall@{n}"],
+                    title=f"{dataset} Recall@{n} vs % Kept",
+                    xname="% kept"
+                )
+            })

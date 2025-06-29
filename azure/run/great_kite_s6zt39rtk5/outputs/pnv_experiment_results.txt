@@ -1,0 +1,2 @@
+minkloc3dv2_der.txt, config_baseline_v2.txt, model_MinkLocEvd_20250623_0818_final, 97.39, 91.92, 97.39, 91.92
+model.txt, config.txt, model_MinkLocEvd_20250625_0856_final, 96.02, 88.22, 91.24, 80.21, 85.55, 73.40, 82.41, 73.93, 88.81, 78.94

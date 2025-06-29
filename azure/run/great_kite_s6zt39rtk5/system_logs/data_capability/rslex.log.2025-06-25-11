@@ -1,0 +1,6 @@
+2025-06-25T11:02:25.725920Z  INFO rslex_fuse::fuse_fs::fuse_mount: [rslex-fuse::FuseMount::unmount] starting filesystem unmount pid=27 mount_point=/mnt/azureml/cr/j/82b77f92576649c0a593c94f7a0c0d2c/cap/data-capability/wd/INPUT_input_data
+2025-06-25T11:02:25.750385Z  INFO rslex_fuse::fuse_fs::fuse_mount::fs_operations: [rslex-fuse::FuseMount::destroy] destroying file system
+2025-06-25T11:02:25.750506Z  INFO rslex_fuse::direct_volume_mount::direct_volume_mount: [rslex-fuse::DirectVolumeOptions::destroy()] destroying filesystem handler=AmlDatastore pid=27 opened_file_handles=0 mount_point=/mnt/azureml/cr/j/82b77f92576649c0a593c94f7a0c0d2c/cap/data-capability/wd/INPUT_input_data
+2025-06-25T11:02:26.571483Z  INFO rslex_fuse::fuse_fs::fuse_mount: [rslex-fuse::FuseMount::unmount] starting filesystem unmount pid=27 mount_point=/mnt/azureml/cr/j/82b77f92576649c0a593c94f7a0c0d2c/cap/data-capability/wd/INPUT_input_data
+2025-06-25T11:02:26.571539Z  WARN rslex_fuse::fuse_fs::fuse_mount: [rslex-fuse::FuseMount::unmount] attempted to unmount not mounted file system pid=27 mount_point=/mnt/azureml/cr/j/82b77f92576649c0a593c94f7a0c0d2c/cap/data-capability/wd/INPUT_input_data
+2025-06-25T11:02:26.571550Z  INFO rslex_fuse::fuse_fs::fuse_mount: [rslex-fuse::FuseFs::drop]
